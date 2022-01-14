@@ -4,6 +4,8 @@ namespace Com\Daw2\Controllers;
 class CsvController extends \Com\Daw2\Core\BaseController
 {
    
+   private static $_SEXOS = ['total', 'hombres', 'mujeres'];
+   
    public function index() : void
    {                                 
         $_vars = array('titulo' => 'Datos población Pontevedra',
@@ -123,6 +125,25 @@ class CsvController extends \Com\Daw2\Core\BaseController
        $this->view->showViews(array('templates/header.view.php', 'pontevedra.2020.totales.view.php', 'templates/footer.view.php'), $_vars);   
    }
    
+   public function ejercicio05(){
+       $_vars = array('titulo' => 'Añadir registro Poblacion Pontevedra',
+                      'breadcumb' => array('Inicio' => array('url' => '#', 'active' => false)),
+                      'csv_div_titulo' => 'Formulario alta',                     
+            );
+       if(isset($_POST['action']) && $_POST['action'] == 'guardar'){
+           $_vars['sanitized'] = $this->sanitizeForm($_POST);           
+           $_vars['errors'] = $this->checkFormEj05($_POST);
+           if(count($_vars['errors']) == 0){
+               $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra.csv');
+               $_vars['exito'] = $csvModel->insertRow([$_POST['municipio'], ucfirst($_POST['sexo']), $_POST['ano'], $_POST['poblacion']]);
+           }
+       }
+       elseif(isset($_POST['action']) && $_POST['action'] == 'cancelar'){
+           $this->ejercicio01();
+       }
+       $this->view->showViews(array('templates/header.view.php', 'pontevedra.view.php', 'templates/footer.view.php'), $_vars);   
+   }
+   
    private function sanitizeForm(array $_data) : array{
        return filter_var_array($_data, FILTER_SANITIZE_SPECIAL_CHARS);
    }
@@ -137,6 +158,34 @@ class CsvController extends \Com\Daw2\Core\BaseController
        }
        elseif($_data['poblacion'] <= 0){
            $_errors['poblacion'] = 'La población debe ser mayor que cero';
+       }
+       return $_errors;
+   }
+   
+   private function checkFormEj05(array $_data) : array{
+       $_errors = [];
+       if(!preg_match("/^[a-zA-Z0-9, ]+$/", $_data['municipio'])){
+           $_errors['municipio'] = 'Sólo se permiten letras y números';
+       }
+       if(!filter_var($_data['poblacion'], FILTER_VALIDATE_INT)){
+           $_errors['poblacion'] = "La población debe ser un número entero";
+       }
+       elseif($_data['poblacion'] <= 0){
+           $_errors['poblacion'] = 'La población debe ser mayor que cero';
+       }
+       if(!in_array($_data['sexo'], self::$_SEXOS)){
+           $_errors['sexo'] = 'Inserte un sexo válido';
+       }
+       if(!filter_var($_data['ano'], FILTER_VALIDATE_INT) || $_data['ano'] < 1990 || $_data['ano'] > date('Y')){
+           $_errors['ano'] = 'Debe insertar un año entre 1990 y '.date('Y');
+       }
+       $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra.csv');
+       $_datos = $csvModel->getPoblacionPontevedra();
+       foreach($_datos as $fila){
+           if($fila[0] === $_data['municipio'] && $fila[1] === $_data['sexo'] && $fila[2] === $_data['ano']){
+               $_errors['municipio'] = "Ya existe una fila para $_data[municipio], $_data[ano], $_data[sexo]";
+               break;
+           }
        }
        return $_errors;
    }
