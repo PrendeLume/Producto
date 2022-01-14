@@ -16,4 +16,11 @@ class CSVModel{
         }
         return $data;
     }
+    
+    public function insertRow(array $row) : bool{
+        $resource = fopen($this->filename, 'a');
+        $exito = fputcsv($resource, $row, ';');
+        fclose($resource);
+        return is_int($exito);
+    }
 }

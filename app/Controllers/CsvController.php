@@ -104,4 +104,40 @@ class CsvController extends \Com\Daw2\Core\BaseController
         $this->view->showViews(array('templates/header.view.php', 'csv.footer.personalizado.view.php', 'templates/footer.view.php'), $_vars);   
    }
    
+   public function ejercicio04(){
+       $_vars = array('titulo' => 'Añadir registro Poblacion_pontevedra_2020',
+                      'breadcumb' => array('Inicio' => array('url' => '#', 'active' => false)),
+                      'csv_div_titulo' => 'Formulario alta',                     
+            );
+       if(isset($_POST['action']) && $_POST['action'] == 'guardar'){
+           $_vars['sanitized'] = $this->sanitizeForm($_POST);           
+           $_vars['errors'] = $this->checkFormEj04($_POST);
+           if(count($_vars['errors']) == 0){
+               $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra_2020_totales.csv');
+               $_vars['exito'] = $csvModel->insertRow([$_POST['municipio'], 'Total', '2020', $_POST['poblacion']]);
+           }
+       }
+       elseif(isset($_POST['action']) && $_POST['action'] == 'cancelar'){
+           $this->ejercicio03();
+       }
+       $this->view->showViews(array('templates/header.view.php', 'pontevedra.2020.totales.view.php', 'templates/footer.view.php'), $_vars);   
+   }
+   
+   private function sanitizeForm(array $_data) : array{
+       return filter_var_array($_data, FILTER_SANITIZE_SPECIAL_CHARS);
+   }
+   
+   private function checkFormEj04(array $_data) : array{
+       $_errors = [];
+       if(!preg_match("/^[a-zA-Z0-9, ]+$/", $_data['municipio'])){
+           $_errors['municipio'] = 'Sólo se permiten letras y números';
+       }
+       if(!filter_var($_data['poblacion'], FILTER_VALIDATE_INT)){
+           $_errors['poblacion'] = "La población debe ser un número entero";
+       }
+       elseif($_data['poblacion'] <= 0){
+           $_errors['poblacion'] = 'La población debe ser mayor que cero';
+       }
+       return $_errors;
+   }
 }
