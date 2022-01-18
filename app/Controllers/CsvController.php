@@ -36,11 +36,11 @@ class CsvController extends \Com\Daw2\Core\BaseController
    public function ejercicio01(\Com\Daw2\Helpers\Mensaje $mensaje = NULL) : void{
        $_vars = array('titulo' => 'Histórico población Pontevedra',
                       'breadcumb' => array('Inicio' => array('url' => '#', 'active' => false)),
-                      'csv_div_titulo' => 'Datos del CSV',
-                      'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/csv.view.js'),
-                      'mensaje' => $mensaje
+                      'csv_div_titulo' => 'Datos del CSV',                      
+                      'mensaje' => $mensaje,
+                      'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/csv.view.js')
             );
-                  
+        $_vars['mensaje'] = $mensaje;
         $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra2.csv');
         $_vars["data"] = $csvModel->getPoblacionPontevedra(); 
         if(count($_vars['data']) > 1){ //La primera fila son los nombres de columna
@@ -76,11 +76,12 @@ class CsvController extends \Com\Daw2\Core\BaseController
         $this->view->showViews(array('templates/header.view.php', 'csv.view.php', 'templates/footer.view.php'), $_vars); 
    }
    
-   public function ejercicio03(){
+   public function ejercicio03(\Com\Daw2\Helpers\Mensaje $mensaje = NULL){
        $_vars = array('titulo' => 'Histórico población Pontevedra',
                       'breadcumb' => array('Inicio' => array('url' => '#', 'active' => false)),
                       'csv_div_titulo' => 'Datos del CSV',
-                        'columnasMostrar' => array(0, 3),
+                      'columnasMostrar' => array(0, 3),
+                      'mensaje' => $mensaje,
                       'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/csv.view.js')
             );
                   
@@ -120,11 +121,11 @@ class CsvController extends \Com\Daw2\Core\BaseController
                $_vars['exito'] = $csvModel->insertRow([$_POST['municipio'], 'Total', '2020', $_POST['poblacion']]);
                if($_vars['exito']){
                    $mensaje = new \Com\Daw2\Helpers\Mensaje('success', 'Éxito', 'El registro ha sido guardado con éxito');
-                   $this->ejercicio01($mensaje);
+                   $this->ejercicio03($mensaje);
                }
                else{
                    $mensaje = new \Com\Daw2\Helpers\Mensaje('danger', 'Error', 'Ha sucedido un error indeterminado');
-                   $this->ejercicio01($mensaje);
+                   $this->ejercicio03($mensaje);
                }
            }
        }
@@ -143,14 +144,27 @@ class CsvController extends \Com\Daw2\Core\BaseController
            $_vars['sanitized'] = $this->sanitizeForm($_POST);           
            $_vars['errors'] = $this->checkFormEj05($_POST);
            if(count($_vars['errors']) == 0){
-               $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra.csv');
-               $_vars['exito'] = $csvModel->insertRow([$_POST['municipio'], ucfirst($_POST['sexo']), $_POST['ano'], $_POST['poblacion']]);
+               $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra2.csv');
+               $_vars['exito'] = $csvModel->insertRow([$_POST['poblacion'], ucfirst($_POST['sexo']), $_POST['ano'], $_POST['poblacion']]);
+               if($_vars['exito']){
+                   $mensaje = new \Com\Daw2\Helpers\Mensaje('success', 'Éxito', 'El registro ha sido guardado con éxito');
+                   $this->ejercicio01($mensaje);
+               }
+               else{
+                   $mensaje = new \Com\Daw2\Helpers\Mensaje('danger', 'Error', 'Ha sucedido un error indeterminado');
+                   $this->ejercicio01($mensaje);
+               }
+           }
+           else{
+                $this->view->showViews(array('templates/header.view.php', 'pontevedra.view.php', 'templates/footer.view.php'), $_vars);   
            }
        }
        elseif(isset($_POST['action']) && $_POST['action'] == 'cancelar'){
            $this->ejercicio01();
        }
-       $this->view->showViews(array('templates/header.view.php', 'pontevedra.view.php', 'templates/footer.view.php'), $_vars);   
+       else{
+            $this->view->showViews(array('templates/header.view.php', 'pontevedra.view.php', 'templates/footer.view.php'), $_vars);   
+       }
    }
    
    private function sanitizeForm(array $_data) : array{
@@ -188,10 +202,10 @@ class CsvController extends \Com\Daw2\Core\BaseController
        if(!filter_var($_data['ano'], FILTER_VALIDATE_INT) || $_data['ano'] < 1990 || $_data['ano'] > date('Y')){
            $_errors['ano'] = 'Debe insertar un año entre 1990 y '.date('Y');
        }
-       $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra.csv');
+       $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra2.csv');
        $_datos = $csvModel->getPoblacionPontevedra();
-       foreach($_datos as $fila){
-           if($fila[0] === $_data['municipio'] && $fila[1] === $_data['sexo'] && $fila[2] === $_data['ano']){
+       foreach($_datos as $fila){    
+           if($fila[0] == $_data['municipio'] && $fila[1] == ucfirst($_data['sexo']) && $fila[2] == $_data['ano']){
                $_errors['municipio'] = "Ya existe una fila para $_data[municipio], $_data[ano], $_data[sexo]";
                break;
            }

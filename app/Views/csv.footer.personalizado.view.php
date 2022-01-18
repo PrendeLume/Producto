@@ -25,6 +25,11 @@
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 <div class="row">
     <div class="col-12">
+        <?php
+        if(isset($mensaje)){
+            $mensaje->show();
+        }
+        ?>
         <div class="card shadow mb-4">
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
