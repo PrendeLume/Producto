@@ -33,18 +33,19 @@ class CsvController extends \Com\Daw2\Core\BaseController
         $this->view->showViews(array('templates/header.view.php', 'csv_personalizado.view.php', 'templates/footer.view.php'), $_vars);      
    }
    
-   public function ejercicio01() : void{
+   public function ejercicio01(\Com\Daw2\Helpers\Mensaje $mensaje = NULL) : void{
        $_vars = array('titulo' => 'Histórico población Pontevedra',
                       'breadcumb' => array('Inicio' => array('url' => '#', 'active' => false)),
                       'csv_div_titulo' => 'Datos del CSV',
-                      'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/csv.view.js')
+                      'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/csv.view.js'),
+                      'mensaje' => $mensaje
             );
                   
         $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra2.csv');
         $_vars["data"] = $csvModel->getPoblacionPontevedra(); 
         if(count($_vars['data']) > 1){ //La primera fila son los nombres de columna
-            $filaMax = $_vars["data"][0];
-            $filaMin = $_vars["data"][0];
+            $filaMax = $_vars["data"][1];
+            $filaMin = $_vars["data"][1];
         }
         else{
             $filaMax = NULL;
@@ -117,6 +118,14 @@ class CsvController extends \Com\Daw2\Core\BaseController
            if(count($_vars['errors']) == 0){
                $csvModel = new \Com\Daw2\Models\CSVModel(\Com\Daw2\Core\Config::getInstance()->get('DATA_FOLDER').'poblacion_pontevedra_2020_totales.csv');
                $_vars['exito'] = $csvModel->insertRow([$_POST['municipio'], 'Total', '2020', $_POST['poblacion']]);
+               if($_vars['exito']){
+                   $mensaje = new \Com\Daw2\Helpers\Mensaje('success', 'Éxito', 'El registro ha sido guardado con éxito');
+                   $this->ejercicio01($mensaje);
+               }
+               else{
+                   $mensaje = new \Com\Daw2\Helpers\Mensaje('danger', 'Error', 'Ha sucedido un error indeterminado');
+                   $this->ejercicio01($mensaje);
+               }
            }
        }
        elseif(isset($_POST['action']) && $_POST['action'] == 'cancelar'){

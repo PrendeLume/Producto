@@ -25,6 +25,17 @@
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 <div class="row">
     <div class="col-12">
+        <?php
+        if(isset($mensaje)){
+            ?>
+        <div class="alert alert-<?php echo $mensaje->getType(); ?> alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="<?php echo $mensaje->getIcon(); ?>"> </i><?php echo $mensaje->getTitle(); ?></h5>
+            <?php echo $mensaje->getText(); ?>
+        </div>
+        <?php
+        }
+        ?>
         <div class="card shadow mb-4">
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -76,13 +87,13 @@
                             <td><strong><?php echo $filaMin[0]; ?></strong></td>
                             <td><?php echo $filaMin[2]; ?></td>
                             <td><strong>MIN</strong></td>
-                            <td><?php echo number_format($filaMin[3], 0, ",", "."); ?></td>
+                            <td><?php echo is_numeric($filaMax[3]) ? number_format($filaMin[3], 0, ",", ".") : ''; ?></td>
                         </tr>
                         <tr>
                             <td><strong><?php echo $filaMax[0]; ?></strong></td>
                             <td><?php echo $filaMax[2]; ?></td>
                             <td><strong>MAX</strong></td>
-                            <td><?php echo number_format($filaMax[3], 0, ",", "."); ?></td>
+                            <td><?php echo is_numeric($filaMax[3]) ? number_format($filaMax[3], 0, ",", ".") : ''; ?></td>
                         </tr>
                     </tfoot>
                     <?php
