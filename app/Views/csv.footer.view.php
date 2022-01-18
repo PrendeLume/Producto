@@ -27,13 +27,7 @@
     <div class="col-12">
         <?php
         if(isset($mensaje)){
-            ?>
-        <div class="alert alert-<?php echo $mensaje->getType(); ?> alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="<?php echo $mensaje->getIcon(); ?>"> </i><?php echo $mensaje->getTitle(); ?></h5>
-            <?php echo $mensaje->getText(); ?>
-        </div>
-        <?php
+            $mensaje->show();
         }
         ?>
         <div class="card shadow mb-4">

@@ -60,4 +60,11 @@ class Mensaje{
     public function getText() {
         return $this->text;
     }
+    
+    public function show(){
+        echo '<div class="alert alert-'.$this->getType().' alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="'.$this->getIcon().'"> </i>'.$this->getTitle().'</h5>'.
+            $this->getText(). '</div>';
+    }
 }
