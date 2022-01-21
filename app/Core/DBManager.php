@@ -28,10 +28,11 @@ class DBManager
         $dbuser = $config->get('dbuser');
         $dbpass = $config->get('dbpass');
         $charset = $config->get('dbcharset');
+        $emulado = $config->get('emulado');
         $options = [
           PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
           PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-          PDO::ATTR_EMULATE_PREPARES   => false,
+          PDO::ATTR_EMULATE_PREPARES   => $emulado,
         ];
         try{
             $this->db = new PDO("mysql:host=$host;dbname=$dbname;charset=$charset",

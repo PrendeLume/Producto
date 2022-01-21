@@ -31,7 +31,7 @@ class Usuario {
     private $salarioBruto;
     private $retencionIRPF;
     
-    public function __construct(){  }        
+    private function __construct(){ }        
     
     /*public function __get($key){
         if(isset($this->values[ $key ])){
