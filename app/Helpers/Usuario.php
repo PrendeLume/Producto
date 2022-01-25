@@ -45,4 +45,22 @@ class Usuario {
     public function getSalarioNeto(){
         return $this->salarioBruto * ( 1 - $this->retencionIRPF / 100);
     }
+    
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function getRol() {
+        return $this->rol;
+    }
+
+    public function getSalarioBruto() {
+        return $this->salarioBruto;
+    }
+
+    public function getRetencionIRPF() {
+        return $this->retencionIRPF;
+    }
+
+
 }
