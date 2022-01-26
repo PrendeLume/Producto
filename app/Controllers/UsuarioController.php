@@ -36,7 +36,21 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
                       'div_title' => 'Usuarios registrados',                      
             );
         $usuariosModel = new UsuariosModel();
-        $_vars['data'] = $usuariosModel->getAllUsuarios();
+        if(!isset($_GET['opcion'])){
+            $_vars['data'] = $usuariosModel->getAllUsuarios();
+        }
+        else{
+            if(!empty($_GET['tipo'])){
+                $_vars['data'] = $usuariosModel->getUsuariosByRol($_GET['tipo']);
+            }
+            elseif(!empty($_GET['username'])){
+                $_vars['data'] = $usuariosModel->getUsuariosByUsername($_GET['username']);
+            }
+            else{
+                $_vars['data'] = $usuariosModel->getAllUsuarios();
+            }
+        }
+        $_vars['roles'] = $usuariosModel->getRoles();
         $this->view->showViews(array('templates/header.view.php', 'usuarios.index.view.php', 'templates/footer.view.php'), $_vars);  
     }
     

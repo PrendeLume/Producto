@@ -29,5 +29,25 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel{
         return $query->fetchAll();
     }
     
+    public function getRoles() : array{
+        $query = $this->db->query("SELECT DISTINCT rol FROM usuario ORDER BY rol");
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        return $query->fetchAll();
+    }
+    
+    public function getUsuariosByRol(string $rol) : array{
+        $query = $this->db->prepare("SELECT * FROM usuario WHERE rol = ?");
+        $query->execute([$rol]);
+        $query->setFetchMode(PDO::FETCH_CLASS, '\Com\Daw2\Helpers\Usuario');
+        return $query->fetchAll();
+    }
+    
+    public function getUsuariosByUsername(string $username) : array{
+        $query = $this->db->prepare("SELECT * FROM usuario WHERE username LIKE ?");
+        $query->execute(["%$username%"]);
+        $query->setFetchMode(PDO::FETCH_CLASS, '\Com\Daw2\Helpers\Usuario');
+        return $query->fetchAll();
+    }
+    
 }
 
