@@ -18,7 +18,7 @@
                                   <?php
                                   foreach($roles as $row){
                                   ?>
-                                    <option value="<?php echo $row['rol']; ?>" <?php echo $row['rol'] === $_GET['tipo'] ? 'selected' : ''; ?>><?php echo ucfirst($row['rol']); ?></option>
+                                    <option value="<?php echo $row['rol']; ?>" <?php echo isset($_GET['rol']) && $row['rol'] === $_GET['tipo'] ? 'selected' : ''; ?>><?php echo ucfirst($row['rol']); ?></option>
                                   <?php
                                   }
                                   ?>
@@ -31,7 +31,26 @@
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Nombre de usuario" value="<?php echo isset($_GET['username']) ? filter_var($_GET['username'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
                             </div>
                         </div>
-                    </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="username">Salario min/max</label>
+                                <div class="">
+                                    <input type="number" class="form-control col-5 float-left" id="min" name="min" placeholder="Min" value="<?php echo isset($_GET['min']) ? filter_var($_GET['min'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                    
+                                    <input type="number" class="form-control col-5 float-right" id="max" name="max" placeholder="Max" value="<?php echo isset($_GET['max']) ? filter_var($_GET['max'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="username">Cotización min/max</label>
+                                <div class="">
+                                    <input type="number" class="form-control col-5 float-left" id="min_cotizacion" name="min_cotizacion" placeholder="Min % cotización" value="<?php echo isset($_GET['min_cotizacion']) ? filter_var($_GET['min_cotizacion'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                    
+                                    <input type="number" class="form-control col-5 float-right" id="max_cotizacion" name="max_cotizacion" placeholder="Max % cotización" value="<?php echo isset($_GET['max_cotizacion']) ? filter_var($_GET['max_cotizacion'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                </div>
+                            </div>
+                        </div>                        
                 </div>
                 <div class="card-footer">                        
                     <a href="./?controller=Usuario" class="btn btn-danger float-right " value="reset">Resetear</a>
@@ -48,10 +67,10 @@
                 <table id="usuariosTable" class="table table-bordered table-striped  dataTable">                    
                     <thead>
                         <tr>
-                            <th>Nombre de usuario</th>
-                            <th>Tipo</th>
-                            <th>Salario</th>
-                            <th>Cotización</th>
+                            <th><a href="<?php echo $url; ?>&order=0">Nombre de usuario</a> <i class="fas fa-sort-alpha-down"></i></th>
+                            <th><a href="<?php echo $url; ?>&order=1">Tipo</a></th>
+                            <th><a href="<?php echo $url; ?>&order=2">Salario</a></th>
+                            <th><a href="<?php echo $url; ?>&order=3">Cotización</a></th>
                             <th>Salario Neto</th>
                         </tr>
                     </thead>

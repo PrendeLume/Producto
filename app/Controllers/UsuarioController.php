@@ -29,29 +29,69 @@ use Com\Daw2\Models\UsuariosModel;
  */
 class UsuarioController extends \Com\Daw2\Core\BaseController{
     
+    private static $_ORDER_COLUMS = array('username', 'rol', 'salarioBruto', 'retencionIRPF');
+    
     public function index(){
         $_vars = array('titulo' => 'Usuarios',
                       'breadcumb' => array('Inicio' => array('url' => '#', 'active' => false),
                                            'Usuarios' => array('url' => '#', 'active' => false)),
-                      'div_title' => 'Usuarios registrados',                      
+                      'div_title' => 'Usuarios registrados',
+                      'url' => $this->generateCleanUrl()
             );
         $usuariosModel = new UsuariosModel();
-        if(!isset($_GET['opcion'])){
-            $_vars['data'] = $usuariosModel->getAllUsuarios();
+        //Validamos y mapeamos la petición int de la vista para que la entienda el modelo
+        if(isset($_GET['order']) && filter_var($_GET['order'], FILTER_VALIDATE_INT) && $_GET['order'] < count(self::$_ORDER_COLUMS)){
+             $order = self::$_ORDER_COLUMS[$_GET['order']];
         }
         else{
-            if(!empty($_GET['tipo'])){
-                $_vars['data'] = $usuariosModel->getUsuariosByRol($_GET['tipo']);
-            }
-            elseif(!empty($_GET['username'])){
-                $_vars['data'] = $usuariosModel->getUsuariosByUsername($_GET['username']);
-            }
-            else{
-                $_vars['data'] = $usuariosModel->getAllUsuarios();
-            }
+            $order = self::$_ORDER_COLUMS[0];
         }
+        //Validamos el sentido recibido por la vista
+        if(isset($_GET['sentido']) && ($_GET['sentido'] === 'asc' || $_GET['sentido'] === 'desc')){
+            $sentido = $_GET['sentido'];
+        }
+        else{
+            $sentido = "ASC";
+        }        
+        $_vars['order'] = $order;
+        $_vars['sentido'] = $sentido;
+        $_vars['data'] = $usuariosModel->getUsuariosByFilters($this->generateFilterArray($_GET), $order, $sentido);
         $_vars['roles'] = $usuariosModel->getRoles();
         $this->view->showViews(array('templates/header.view.php', 'usuarios.index.view.php', 'templates/footer.view.php'), $_vars);  
+    }
+    
+    private function generateFilterArray(array $_filtros) : array{
+        $_filters = [];
+        if(!empty($_filtros['tipo'])){
+            $_filters['rol'] = $_filtros['tipo'];
+        }
+        if(!empty($_filtros['username'])){
+            $_filters['username'] = $_filtros['username'];
+        }
+        if(isset($_filtros['min']) && filter_var($_filtros['min'], FILTER_VALIDATE_FLOAT)){
+            $_filters['min_salar'] = (float) $_filtros['min'];
+        }
+        if(isset($_filtros['max']) && filter_var($_filtros['max'], FILTER_VALIDATE_FLOAT)){
+            $_filters['max_salar'] = (float) $_filtros['max'];
+        }
+        if(isset($_filtros['min_irpf']) && filter_var($_filtros['min_cotizacion'], FILTER_VALIDATE_INT)){
+            $_filters['min_irpf'] = (int) $_filtros['min_cotizacion'];
+        }
+        if(isset($_filtros['max_cotizacion']) && filter_var($_filtros['max_cotizacion'], FILTER_VALIDATE_INT)){
+            $_filters['max_irpf'] = (int) $_filtros['max_cotizacion'];
+        }
+        return $_filters;
+    }
+    
+    private function generateCleanUrl() : string{
+        $_vars = [];
+        foreach($_GET as $key => $value){
+            if($key !== 'order' && $key !== 'sentido'){
+                $_vars[] = $key.'='.$value;
+            }
+        }
+        $url = "./?" . implode("&", $_vars);
+        return $url;
     }
     
 }
