@@ -39,13 +39,17 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
                       'url' => $this->generateCleanUrl()
             );
         $usuariosModel = new UsuariosModel();
-        //Validamos y mapeamos la petición int de la vista para que la entienda el modelo
+        //Validamos y mapeamos la petición int de la vista para que la entienda el modelo        
+        
         if(isset($_GET['order']) && filter_var($_GET['order'], FILTER_VALIDATE_INT) && $_GET['order'] < count(self::$_ORDER_COLUMS)){
-             $order = self::$_ORDER_COLUMS[$_GET['order']];
+             $order = self::$_ORDER_COLUMS[$_GET['order']];             
+             $orderInt = $_GET['order'];
         }
         else{
             $order = self::$_ORDER_COLUMS[0];
+            $orderInt = 0;
         }
+        
         //Validamos el sentido recibido por la vista
         if(isset($_GET['sentido']) && ($_GET['sentido'] === 'asc' || $_GET['sentido'] === 'desc')){
             $sentido = $_GET['sentido'];
@@ -53,7 +57,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
         else{
             $sentido = "ASC";
         }        
-        $_vars['order'] = $order;
+        $_vars['order'] = $orderInt;
         $_vars['sentido'] = $sentido;
         $_vars['data'] = $usuariosModel->getUsuariosByFilters($this->generateFilterArray($_GET), $order, $sentido);
         $_vars['roles'] = $usuariosModel->getRoles();
