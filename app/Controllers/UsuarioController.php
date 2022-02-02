@@ -38,7 +38,8 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
                       'breadcumb' => array('Inicio' => array('url' => '#', 'active' => false),
                                            'Usuarios' => array('url' => '#', 'active' => false)),
                       'div_title' => 'Usuarios registrados',
-                      'url' => $this->generateCleanUrl()
+                      'url' => $this->generateCleanUrl(),
+                      'urlPagina' => $this->generateCleanUrlPaginador()
             );
         $usuariosModel = new UsuariosModel();
         //Validamos y mapeamos la petición int de la vista para que la entienda el modelo        
@@ -110,6 +111,17 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
         $_vars = [];
         foreach($_GET as $key => $value){
             if($key !== 'order' && $key !== 'sentido'){
+                $_vars[] = $key.'='.$value;
+            }
+        }
+        $url = "./?" . implode("&", $_vars);
+        return $url;
+    }
+    
+    private function generateCleanUrlPaginador() : string{
+        $_vars = [];
+        foreach($_GET as $key => $value){
+            if($key != 'pag'){
                 $_vars[] = $key.'='.$value;
             }
         }
