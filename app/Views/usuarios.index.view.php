@@ -18,7 +18,7 @@
                                     <?php
                                     foreach ($roles as $row) {
                                         ?>
-                                        <option value="<?php echo $row['rol']; ?>" <?php echo isset($_GET['rol']) && $row['rol'] === $_GET['tipo'] ? 'selected' : ''; ?>><?php echo ucfirst($row['rol']); ?></option>
+                                        <option value="<?php echo $row['rol']; ?>" <?php echo isset($_GET['tipo']) && $row['rol'] === $_GET['tipo'] ? 'selected' : ''; ?>><?php echo ucfirst($row['rol']); ?></option>
                                         <?php
                                     }
                                     ?>
@@ -61,7 +61,7 @@
         <div class="card shadow mb-4">
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary"><?php echo $div_title; ?></h6>                                    
+                <h6 class="m-0 font-weight-bold text-primary"><?php echo $div_title; ?> <?php echo $total.' - '.$numPaginas; ?></h6>                                    
             </div>
             <div class="card-body">  
                 <table id="usuariosTable" class="table table-bordered table-striped  dataTable">                    

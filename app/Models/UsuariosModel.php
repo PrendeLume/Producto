@@ -85,11 +85,37 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel{
         return $query->fetchAll();
     }
     
-    public function getUsuariosByFilters(array $_filtros, string $order = '', string $sentido = '') : array{
+    public function getUsuariosByFilters(array $_filtros, string $order = '', string $sentido = '', $pag = 1, $tamPag = 10) : array{
         $orderBy = " ORDER BY ".$order. " ".$sentido;
         
-        
         $query = "SELECT * FROM usuario WHERE (1=1)";
+        
+        $_where = $this->generateWhereByFilter($_filtros);
+        $_params = $_where['params'];
+        $query .= $_where['where']; 
+        
+        $query .= $orderBy;
+        $pagina = ($pag - 1) * $tamPag;
+        $paginacion = " LIMIT $pagina, $tamPag";
+        $query .= $paginacion;
+        $statement = $this->db->prepare($query);
+        $statement->execute($_params);
+        $statement->setFetchMode(PDO::FETCH_CLASS, '\Com\Daw2\Helpers\Usuario');
+        return $statement->fetchAll();
+    }
+    
+    public function getCountUsuariosByFilter(array $_filtros) : int{
+        $query = "SELECT COUNT(*) AS total FROM usuario WHERE (1=1)";
+        $_where = $this->generateWhereByFilter($_filtros);
+        $_params = $_where['params'];
+        $query .= $_where['where'];        
+        $statement = $this->db->prepare($query);
+        $statement->execute($_params);
+        return $statement->fetchColumn();
+    }
+    
+    private function generateWhereByFilter(array $_filtros) : array{
+        $query = "";
         $_params = [];
         if(isset($_filtros['rol'])){
             $query .= " AND rol = :rol";
@@ -115,11 +141,10 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel{
             $query .= " AND retencionIRPF <= :max_irpf";
             $_params['max_irpf'] = $_filtros['max_irpf'];
         }
-        $query .= $orderBy;
-        $statement = $this->db->prepare($query);
-        $statement->execute($_params);
-        $statement->setFetchMode(PDO::FETCH_CLASS, '\Com\Daw2\Helpers\Usuario');
-        return $statement->fetchAll();
+        return array(
+            'where' => $query,
+            'params' => $_params
+        );
     }
     
 }

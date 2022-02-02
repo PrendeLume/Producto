@@ -29,6 +29,8 @@ use Com\Daw2\Models\UsuariosModel;
  */
 class UsuarioController extends \Com\Daw2\Core\BaseController{
     
+    private static $tamPag = 25;
+    
     private static $_ORDER_COLUMS = array('username', 'rol', 'salarioBruto', 'retencionIRPF');
     
     public function index(){
@@ -56,11 +58,25 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
         }
         else{
             $sentido = "ASC";
-        }        
+        } 
+        
+        //Seleccionamos la página a cargar
+        if(isset($_GET['pag']) && filter_var($_GET['pag'], FILTER_VALIDATE_INT) && (int)$_GET['pag'] >= 1){
+            $pag = (int)$_GET['pag'];
+        }
+        else{
+            $pag = 1;
+        }
+        
         $_vars['order'] = $orderInt;
         $_vars['sentido'] = $sentido;
-        $_vars['data'] = $usuariosModel->getUsuariosByFilters($this->generateFilterArray($_GET), $order, $sentido);
+        $_vars['data'] = $usuariosModel->getUsuariosByFilters($this->generateFilterArray($_GET), $order, $sentido, $pag, self::$tamPag);
         $_vars['roles'] = $usuariosModel->getRoles();
+        $_vars['pag'] = $pag;
+        $total = $usuariosModel->getCountUsuariosByFilter($this->generateFilterArray($_GET));
+        $numPaginas = ceil($total / self::$tamPag);  
+        $_vars['total'] = $total;
+        $_vars['numPaginas'] = $numPaginas;
         $this->view->showViews(array('templates/header.view.php', 'usuarios.index.view.php', 'templates/footer.view.php'), $_vars);  
     }
     
@@ -78,7 +94,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
         if(isset($_filtros['max']) && filter_var($_filtros['max'], FILTER_VALIDATE_FLOAT)){
             $_filters['max_salar'] = (float) $_filtros['max'];
         }
-        if(isset($_filtros['min_irpf']) && filter_var($_filtros['min_cotizacion'], FILTER_VALIDATE_INT)){
+        if(isset($_filtros['min_cotizacion']) && filter_var($_filtros['min_cotizacion'], FILTER_VALIDATE_INT)){
             $_filters['min_irpf'] = (int) $_filtros['min_cotizacion'];
         }
         if(isset($_filtros['max_cotizacion']) && filter_var($_filtros['max_cotizacion'], FILTER_VALIDATE_INT)){
