@@ -70,13 +70,16 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
         
         $_vars['order'] = $orderInt;
         $_vars['sentido'] = $sentido;
-        $_vars['data'] = $usuariosModel->getUsuariosByFilters($this->generateFilterArray($_GET), $order, $sentido, $pag, self::$tamPag);
+        $_filtros = $this->generateFilterArray($_GET);
+        $_vars['data'] = $usuariosModel->getUsuariosByFilters($_filtros, $order, $sentido, $pag, self::$tamPag);
         $_vars['roles'] = $usuariosModel->getRoles();
         $_vars['pag'] = $pag;
-        $total = $usuariosModel->getCountUsuariosByFilter($this->generateFilterArray($_GET));
+        $total = $usuariosModel->getCountUsuariosByFilter($_filtros);
+        
         $numPaginas = ceil($total / self::$tamPag);  
         $_vars['total'] = $total;
         $_vars['numPaginas'] = $numPaginas;
+        
         $this->view->showViews(array('templates/header.view.php', 'usuarios.index.view.php', 'templates/footer.view.php'), $_vars);  
     }
     
