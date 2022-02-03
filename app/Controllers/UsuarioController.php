@@ -39,7 +39,8 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
                                            'Usuarios' => array('url' => '#', 'active' => false)),
                       'div_title' => 'Usuarios registrados',
                       'url' => $this->generateCleanUrl(),
-                      'urlPagina' => $this->generateCleanUrlPaginador()
+                      'urlPagina' => $this->generateCleanUrlPaginador(),
+                      'js' => array('plugins/select2/js/select2.full.min.js', 'assets/js/pages/select2.loader.js')
             );
         $usuariosModel = new UsuariosModel();
         //Validamos y mapeamos la petición int de la vista para que la entienda el modelo        
@@ -86,7 +87,7 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
     
     private function generateFilterArray(array $_filtros) : array{
         $_filters = [];
-        if(!empty($_filtros['tipo'])){
+        if(!empty($_filtros['tipo']) && is_array($_filtros['tipo'])){
             $_filters['rol'] = $_filtros['tipo'];
         }
         if(!empty($_filtros['username'])){
@@ -111,7 +112,12 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
         $_vars = [];
         foreach($_GET as $key => $value){
             if($key !== 'order' && $key !== 'sentido'){
-                $_vars[] = $key.'='.$value;
+                if(is_array($value)){
+                    $_vars[] = $key.'='.urlencode(json_encode($value));
+                }
+                else{
+                    $_vars[] = $key.'='.urlencode($value);
+                }                
             }
         }
         $url = "./?" . implode("&", $_vars);
@@ -122,7 +128,12 @@ class UsuarioController extends \Com\Daw2\Core\BaseController{
         $_vars = [];
         foreach($_GET as $key => $value){
             if($key != 'pag'){
-                $_vars[] = $key.'='.$value;
+                if(is_array($value)){
+                    $_vars[] = $key.'='.urlencode(json_encode($value));
+                }
+                else{
+                    $_vars[] = $key.'='.urlencode($value);
+                }                
             }
         }
         $url = "./?" . implode("&", $_vars);

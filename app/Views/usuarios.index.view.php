@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 <div class="row">
     <div class="col-12">
         <div class="card shadow mb-4">
@@ -13,12 +15,11 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tipo</label>
-                                <select class="form-control" name="tipo[]" multiple="multiple">
-                                    <option value="">Seleccione un tipo</option>
+                                <select class="form-control select2bs4" name="tipo[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
                                     <?php
                                     foreach ($roles as $row) {
                                         ?>
-                                        <option value="<?php echo $row['rol']; ?>" <?php echo isset($_GET['tipo']) && $row['rol'] === $_GET['tipo'] ? 'selected' : ''; ?>><?php echo ucfirst($row['rol']); ?></option>
+                                    <option value="<?php echo $row['rol']; ?>" <?php echo isset($_GET['tipo']) && in_array($row['rol'], $_GET['tipo'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['rol']); ?></option>
                                         <?php
                                     }
                                     ?>

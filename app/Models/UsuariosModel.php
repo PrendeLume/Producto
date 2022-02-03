@@ -118,8 +118,17 @@ class UsuariosModel extends \Com\Daw2\Core\BaseModel{
         $query = "";
         $_params = [];
         if(isset($_filtros['rol'])){
-            $query .= " AND rol = :rol";
-            $_params['rol'] = $_filtros['rol'];
+            $query .= " AND (";
+            for($i = 0; $i < count($_filtros['rol']); $i++){
+                if($i == 0){
+                    $query .= "rol = :rol$i";                    
+                }
+                else{
+                    $query .= " OR rol = :rol$i";                    
+                }
+                $_params["rol$i"] = $_filtros['rol'][$i];
+            }
+            $query .= ")";
         }
         if(isset($_filtros['username'])){
             $query .= " AND username LIKE :username";
