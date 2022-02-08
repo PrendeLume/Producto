@@ -264,6 +264,9 @@ class CategoriaController extends \Com\Daw2\Core\BaseController{
         if(empty(trim($_data['nombre']))){
             $_errors['nombre'] = 'Inserte un nombre de categoría';
         }
+        elseif(strlen(filter_var($_POST['nombre'], FILTER_SANITIZE_SPECIAL_CHARS)) > 50){
+            $_errors['nombre'] = 'Tamaño excedido';
+        }
         $idCategoria = filter_var($_data['id_categoria'], FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
         if($isEditing){
             if(is_null($idCategoria)){
