@@ -153,4 +153,19 @@ class TestController extends \Com\Daw2\Core\BaseController{
         }        
         
     }
+    
+    public function generateProveedores(){
+        $cantidad = 99;
+        $model = new \Com\Daw2\Models\ProveedorModel();
+        for($i = 0; $i < $cantidad; $i++){
+            $char = chr(65 + ($i % 10));
+            echo $char;
+            $charFinal = chr(65 + ($i % 26));
+            $cif = $char .rand(1,9). str_pad(($i+1), 6, '0', STR_PAD_LEFT) . $charFinal;
+            $codigo = "PROV".str_pad(($i+1), 6, '0', STR_PAD_LEFT);
+            $proveedor = "PROVEEDOR ".str_pad(($i+1), 6, '0', STR_PAD_LEFT);
+            $proveedor = new \Com\Daw2\Helpers\Proveedor($cif, $codigo, $proveedor, "Calle Test Num. ". random_int(1, 999), 'http://test.org', 'España', 'proveedor'.$i.'@test.org');
+            $model->insertProveedorObject($proveedor);
+        }
+    }
 }
