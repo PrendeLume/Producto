@@ -168,4 +168,22 @@ class TestController extends \Com\Daw2\Core\BaseController{
             $model->insertProveedorObject($proveedor);
         }
     }
+    
+    public function generateProductos(){
+        $cantidad = 1027;
+        $_marcas = ['Apple', 'Nintendo', 'Sony', 'Xiaomi', 'Google', 'LG', 'Samsung', 'Microsoft', 'IBM', 'Hitachi', 'Dell', 'Oppo', 'HP', 'Acer', 'MSI', 'Asus'];
+        $_modelos = ['Mega', 'S', 'X', 'High', 'Series X', 'Series S', 'Reno', 'Max', 'Lite'];
+        $descripción = "Inserte una descripción";
+        for($i = 0; $i < $cantidad; $i++){
+            $coste = random_int(1, 500);
+            $margen = rand() * 3 + 1;
+            $stock = random_int(50, 300);
+            $iva = 21;
+            $indexMarca = random_int(0, count($_marcas));
+            $indexModelo = random_int(0, count($_modelos));
+            $codigoModelo = random_int(1, 99);
+            $nombre = $_marcas[$indexMarca]." - ".$_modelos[$indexModelo].$codigoModelo;
+            $codigo = substr($_marcas[$indexMarca], 0, 3);
+        }
+    }
 }

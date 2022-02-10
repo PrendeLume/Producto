@@ -46,4 +46,24 @@ class ProveedorController extends \Com\Daw2\Core\BaseController{
         $_vars["data"] = $model->getAll();
         $this->view->showViews(array('templates/header.view.php', 'proveedor.index.php', 'templates/footer.view.php'), $_vars);      
     }   
+    
+    public function new(){
+        if(isset($_POST['action'])){
+            
+        }
+        else{
+            $_vars = array('titulo' => 'Insertar proveedor',
+                          'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                            'Insertar' => array('url' => '#','active' => true)),
+                          'Título' => 'Alta proveedor'
+                );
+            $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
+        }
+    }
+    
+    private function checkForm(array $data) : array{
+        
+    }
 }
