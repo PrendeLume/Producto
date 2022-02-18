@@ -95,30 +95,100 @@ class ProveedorController extends \Com\Daw2\Core\BaseController{
                             'Proveedores' => array('url' => './?controller=proveedor','active' => false),
                             'Insertar' => array('url' => '#','active' => true)),
                           'Título' => 'Alta proveedor',
-                          'paises' => self::$_PAISES_VALIDOS
+                          'paises' => self::$_PAISES_VALIDOS,
+                          'edited' => \Com\Daw2\Helpers\Proveedor::getStdClass()
                 );
             $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
         }
     }
     
     public function edit(){
-        if(isset($_GET['cif'])){
+        if(isset($_POST['action'])){
+            $_errors = $this->checkForm($_POST);
+            $sanitizado = $this->sanitizeForm($_POST);
+            if(count($_errors) > 0){
+                $model = new \Com\Daw2\Models\ProveedorModel();
+                $proveedor = $model->loadProveedor($_POST['old_cif']);
+                $_vars = array('titulo' => 'Edición de proveedor',
+                          'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                            'Edición' => array('url' => '#','active' => true)),
+                          'Título' => 'Editar proveedor',
+                            'paises' => self::$_PAISES_VALIDOS,
+                          'errors' => $_errors,
+                          'edited' => (object) $sanitizado,
+                          'proveedorOriginal' => $proveedor
+                );
+                $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
+            }
+            else{
+                $model = $model = new \Com\Daw2\Models\ProveedorModel();
+                $proveedor = new \Com\Daw2\Helpers\Proveedor($_POST['cif'], $sanitizado['codigo'], $sanitizado['nombre'], $sanitizado['direccion'], $_POST['website'], $_POST['pais'], $_POST['email']);
+                $proveedor->telefono = $_POST['telefono'];
+                if($model->editProveedor($proveedor, $_POST['old_cif'])){
+                    $msj = new Mensaje('success', 'Éxito', 'El proveedor ha sido guardado con éxito');
+                    $this->index($msj);
+                }
+                else{
+                    $proveedor = $model->loadProveedor($_POST['old_cif']);
+                    $_vars = array('titulo' => 'Edición de proveedor',
+                          'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                            'Edición' => array('url' => '#','active' => true)),
+                          'Título' => 'Editar proveedor',
+                            'paises' => self::$_PAISES_VALIDOS,
+                          'errors' => $_errors,
+                          'edited' => (object) $sanitizado,
+                          'proveedorOriginal' => $proveedor
+                            );
+                    $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars); 
+                }
+            }
+        }
+        elseif(isset($_GET['cif'])){
             $model = new \Com\Daw2\Models\ProveedorModel();
             $proveedor = $model->loadProveedor($_GET['cif']);
-            if(!is_null($proveedor)){
-                var_dump($proveedor);
-                $_vars = array('titulo' => 'Insertar proveedor',
+            if(!is_null($proveedor)){                
+                $_vars = array('titulo' => 'Edición de proveedor',
                                   'breadcumb' => array(
                                     'Inicio' => array('url' => '#', 'active' => false),
                                     'Proveedores' => array('url' => './?controller=proveedor','active' => false),
-                                    'Insertar' => array('url' => '#','active' => true)),
-                                  'Título' => 'Alta proveedor',
+                                    'Edición' => array('url' => '#','active' => true)),
+                                  'Título' => 'Editar proveedor',
                                   'paises' => self::$_PAISES_VALIDOS,
                                   'edited' => $proveedor,
                                   'proveedorOriginal' => $proveedor
                         );
                 $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);    
             }
+        }
+    }
+    
+    public function delete(){
+        $model = new \Com\Daw2\Models\ProveedorModel();
+        $cif = filter_var($_GET['cif'], FILTER_SANITIZE_STRING);
+        if(!empty($cif)){
+            try{
+                if($model->delete($cif)){
+                    $this->index(new Mensaje("success", "¡Eliminada!", "Proveedor borrada con éxito"));
+                }
+                else{
+                    $this->index(new Mensaje("warning", "Sin cambios", "No se ha borrado el proveedor: $cif"));
+                }            
+            }
+            catch(\PDOException $ex){
+                if(strpos($ex->getMessage(), '1451') !== false){
+                    $this->index(new Mensaje("danger", "No permitido", "Antes de borrar un proveedor debe editar o borrar todos sus productos."));
+                }
+                else{
+                    $this->index(new Mensaje("danger", "No permitido", "PDOException: ".$ex->getMessage()));
+                }
+            }
+        }
+        else{
+            $this->index(new Mensaje("warning", "Petición incorrecta", "No se ha facilitado la categoría a borrar"));
         }
     }
     
@@ -130,10 +200,21 @@ class ProveedorController extends \Com\Daw2\Core\BaseController{
             $_errors['cif'] = $checkCif;
         }
         else{
-            $model = new \Com\Daw2\Models\ProveedorModel();
-            $proveedorAux = $model->loadProveedor($_data['cif']);
-            if(!is_null($proveedorAux)){
-                $_errors['cif'] = "Ya existe un proveedor con ese cif";
+            if(empty($_data['old_cif'])){
+                $model = new \Com\Daw2\Models\ProveedorModel();
+                $proveedorAux = $model->loadProveedor($_data['cif']);
+                if(!is_null($proveedorAux)){
+                    $_errors['cif'] = "Ya existe un proveedor con ese cif";
+                }
+            }
+            else{
+                if($_data['old_cif'] !== $_data['cif']){
+                    $model = new \Com\Daw2\Models\ProveedorModel();
+                    $proveedorAux = $model->loadProveedor($_data['cif']);
+                    if(!is_null($proveedorAux)){
+                        $_errors['cif'] = "Ya existe un proveedor con ese cif";
+                    }
+                }
             }
         }
         

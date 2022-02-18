@@ -118,6 +118,19 @@ class Proveedor{
         }
     }
     
+    public static function getStdClass() : \stdClass{
+        $std = new \stdClass();
+        $std->cif = '';        
+        $std->codigo = '';
+        $std->nombre = '';
+        $std->direccion = '';
+        $std->website = '';
+        $std->pais = '';
+        $std->email = '';
+        $std->telefono = '';
+        return $std;
+    }
+    
     
     /*public function setCodigo(string $codigo): void {
         self::checkCodigo($codigo);

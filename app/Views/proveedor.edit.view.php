@@ -27,17 +27,18 @@
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-cubes mr-1"></i>
-                        Datos proveedor <?php echo $edited->cif . ' - '. $edited->nombre; ?><?php var_dump($edited); ?>
+                        Datos proveedor <?php if(isset($proveedorOriginal)) { echo $proveedorOriginal->cif . ' - '. $proveedorOriginal->nombre;  } ?>
                     </h3>                
                 </div>
                 <form action="./?controller=<?php echo $_GET['controller'];?>&action=<?php echo $_GET['action']; ?>" method="post">
+                    <input type="hidden" name="old_cif" value="<?php echo isset($proveedorOriginal) ? $proveedorOriginal->cif : ''; ?>" />
                     <div class="card-body">
                         <div class="row">                            
                             <!-- select -->
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="cif">CIF:</label>
-                                    <input type="text" name="cif" id="cif" class="form-control" value="<?php echo isset($edited) ? $edited->cif : '' ; ?>"  maxlength="9" />
+                                    <input type="text" name="cif" id="cif" class="form-control" value="<?php echo $edited->cif; ?>"  maxlength="9" />
                                     <?php
                                     if(isset($errors['cif'])){
                                     ?>
@@ -50,7 +51,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="codigo">Código:</label>
-                                    <input type="text" name="codigo" id="codigo" class="form-control" value="<?php echo isset($edited) ? $edited->codigo : '' ; ?>"  maxlength="10" />
+                                    <input type="text" name="codigo" id="codigo" class="form-control" value="<?php echo $edited->codigo; ?>"  maxlength="10" />
                                     <?php
                                     if(isset($errors['codigo'])){
                                     ?>
@@ -63,7 +64,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nombre">Nombre:</label>
-                                    <input type="text" name="nombre" id="nombre" class="form-control" value="<?php echo isset($edited) ? $edited->nombre : '' ; ?>"  maxlength="255"/>
+                                    <input type="text" name="nombre" id="nombre" class="form-control" value="<?php echo $edited->nombre; ?>"  maxlength="255"/>
                                     <?php
                                     if(isset($errors['nombre'])){
                                     ?>
@@ -76,7 +77,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="direccion">Dirección:</label>
-                                    <input type="text" name="direccion" id="direccion" class="form-control" value="<?php echo isset($edited) ? $edited->direccion : '' ; ?>"  maxlength="255"/>
+                                    <input type="text" name="direccion" id="direccion" class="form-control" value="<?php echo $edited->direccion; ?>"  maxlength="255"/>
                                     <?php
                                     if(isset($errors['direccion'])){
                                     ?>
@@ -89,7 +90,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="website">Website:</label>
-                                    <input type="text" name="website" id="website" class="form-control" value="<?php echo isset($edited) ? $edited->website : '' ; ?>"  maxlength="255" />
+                                    <input type="text" name="website" id="website" class="form-control" value="<?php echo $edited->website; ?>"  maxlength="255" />
                                     <?php
                                     if(isset($errors['website'])){
                                     ?>
@@ -107,7 +108,7 @@
                                         <?php 
                                         foreach($paises as $pais){
                                             ?>
-                                            <option value="<?php echo $pais; ?>" <?php echo (isset($edited) && $edited->pais === $pais) ? 'selected' : ''; ?>><?php echo $pais; ?></option>
+                                            <option value="<?php echo $pais; ?>" <?php echo ($edited->pais === $pais) ? 'selected' : ''; ?>><?php echo $pais; ?></option>
                                         <?php
                                         }
                                         ?>
@@ -124,7 +125,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email">Email:</label>
-                                    <input type="text" name="email" id="email" class="form-control" value="<?php echo isset($edited) ? $edited->email : '' ; ?>"  maxlength="255" />
+                                    <input type="text" name="email" id="email" class="form-control" value="<?php echo $edited->email; ?>"  maxlength="255" />
                                     <?php
                                     if(isset($errors['email'])){
                                     ?>
@@ -137,7 +138,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="telefono">Teléfono:</label>
-                                    <input type="text" name="telefono" id="telefono" class="form-control" value="<?php echo isset($edited) ? $edited->telefono : '' ; ?>" maxlength="12"/>
+                                    <input type="text" name="telefono" id="telefono" class="form-control" value="<?php echo $edited->telefono; ?>" maxlength="12"/>
                                     <?php
                                     if(isset($errors['telefono'])){
                                     ?>

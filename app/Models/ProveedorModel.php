@@ -73,4 +73,30 @@ class ProveedorModel extends \Com\Daw2\Core\BaseModel{
         return $resultado;
     }
     
+    public function editProveedor(Proveedor $p, string $oldCif) : bool{
+        $stmt = $this->db->prepare("UPDATE proveedor SET cif=:cif, codigo=:codigo, nombre=:nombre, direccion=:direccion, website=:website, pais=:pais, email=:email, telefono=:telefono WHERE cif=:old_cif");
+        $resultado = $stmt->execute([
+                'cif' => $p->cif,
+                'codigo'=> $p->codigo,
+                'nombre' => $p->nombre,
+                'direccion' => $p->direccion,
+                'website' => $p->website,
+                'pais' => $p->pais,
+                'email' => $p->email,
+                'telefono' => $p->telefono,
+                'old_cif' => $oldCif
+        ]);
+        return $resultado;
+    }
+    
+    public function delete(string $cif) : bool{
+        $stmt = $this->db->prepare("DELETE FROM proveedor WHERE cif = ?");
+        if($stmt->execute([$cif])){
+            return $stmt->rowCount() > 0;
+        }
+        else{
+            return false;
+        }
+    }
+    
 }
