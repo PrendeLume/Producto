@@ -83,11 +83,11 @@ class Proveedor{
         }
         elseif($name == "telefono"){
             self::checkTelefono($value);
-            $this->$name = $telefono;
+            $this->$name = $value;
         }
         elseif($name == "email"){
             self::checkEmail($value);
-            $this->telefono = $value;
+            $this->$name = $value;
         }
         elseif($name == "website"){
             self::checkWebsite($value);
@@ -109,9 +109,9 @@ class Proveedor{
         }
     }
 
-    public function __get(string $property){
-        if(property_exists(get_class($this), $property)){
-            return $this->$property;
+    public function __get($name){
+        if (property_exists(get_class($this), $name)) {
+            return $this->$name;
         }
         else{
             return null;

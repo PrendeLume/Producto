@@ -49,4 +49,28 @@ class ProveedorModel extends \Com\Daw2\Core\BaseModel{
         return $proveedor;
     }
     
+    public function loadProveedor(string $cif) : ?Proveedor{
+        $stmt = $this->db->prepare("SELECT * FROM proveedor WHERE cif = ?");
+        $stmt->execute([$cif]);
+        if($row = $stmt->fetch()){
+           return $this->rowToProveedor($row);
+        }        
+        return null;
+    }
+    
+    public function insertProveedor(Proveedor $p) : bool{
+        $stmt = $this->db->prepare("INSERT INTO proveedor (cif, codigo, nombre, direccion, website, pais, email, telefono) VALUES(:cif, :codigo, :nombre, :direccion, :website, :pais, :email, :telefono)");
+        $resultado = $stmt->execute([
+                'cif' => $p->cif,
+                'codigo'=> $p->codigo,
+                'nombre' => $p->nombre,
+                'direccion' => $p->direccion,
+                'website' => $p->website,
+                'pais' => $p->pais,
+                'email' => $p->email,
+                'telefono' => $p->telefono
+        ]);
+        return $resultado;
+    }
+    
 }

@@ -29,6 +29,7 @@ use \Com\Daw2\Helpers\Mensaje;
  */
 class ProveedorController extends \Com\Daw2\Core\BaseController{
    
+    private static $_PAISES_VALIDOS = array('España', 'Portugal', 'Francia');
     /**
      * Sin emulado obtenemos que los números se reciben como float
      */
@@ -49,7 +50,43 @@ class ProveedorController extends \Com\Daw2\Core\BaseController{
     
     public function new(){
         if(isset($_POST['action'])){
-            
+            $_errors = $this->checkForm($_POST);
+            $saneado = $this->sanitizeForm($_POST);
+            if(count($_errors) > 0){
+                $_vars = array('titulo' => 'Insertar proveedor',
+                          'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                            'Insertar' => array('url' => '#','active' => true)),
+                          'Título' => 'Alta proveedor',
+                            'paises' => self::$_PAISES_VALIDOS,
+                          'errors' => $_errors,
+                          'edited' => (object) $saneado
+                );
+                $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
+            }
+            else{
+                $model = new \Com\Daw2\Models\ProveedorModel();
+                $proveedor = new \Com\Daw2\Helpers\Proveedor($_POST['cif'], $saneado['codigo'], $saneado['nombre'], $saneado['direccion'], $_POST['website'], $_POST['pais'], $_POST['email']);
+                $proveedor->telefono = $_POST['telefono'];
+                if($model->insertProveedor($proveedor)){
+                    $msj = new Mensaje('success', 'Éxito', 'El proveedor ha sido guardado con éxito');
+                    $this->index();
+                }
+                else{
+                    $_vars = array('titulo' => 'Insertar proveedor',
+                          'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                            'Insertar' => array('url' => '#','active' => true)),
+                          'Título' => 'Alta proveedor',
+                            'paises' => self::$_PAISES_VALIDOS,
+                          'edited' => (object) $saneado,
+                        'errors' => array('cif' => 'Hubo un error indeterminado al guardar')
+                    );
+                    $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars); 
+                }
+            }
         }
         else{
             $_vars = array('titulo' => 'Insertar proveedor',
@@ -57,13 +94,130 @@ class ProveedorController extends \Com\Daw2\Core\BaseController{
                             'Inicio' => array('url' => '#', 'active' => false),
                             'Proveedores' => array('url' => './?controller=proveedor','active' => false),
                             'Insertar' => array('url' => '#','active' => true)),
-                          'Título' => 'Alta proveedor'
+                          'Título' => 'Alta proveedor',
+                          'paises' => self::$_PAISES_VALIDOS
                 );
             $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
         }
     }
     
-    private function checkForm(array $data) : array{
+    public function edit(){
+        if(isset($_GET['cif'])){
+            $model = new \Com\Daw2\Models\ProveedorModel();
+            $proveedor = $model->loadProveedor($_GET['cif']);
+            if(!is_null($proveedor)){
+                var_dump($proveedor);
+                $_vars = array('titulo' => 'Insertar proveedor',
+                                  'breadcumb' => array(
+                                    'Inicio' => array('url' => '#', 'active' => false),
+                                    'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                                    'Insertar' => array('url' => '#','active' => true)),
+                                  'Título' => 'Alta proveedor',
+                                  'paises' => self::$_PAISES_VALIDOS,
+                                  'edited' => $proveedor,
+                                  'proveedorOriginal' => $proveedor
+                        );
+                $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);    
+            }
+        }
+    }
+    
+    private function checkForm(array $_data) : array{
+        $_errors = array();
         
+        $checkCif = self::checkCif($_data['cif']);
+        if(!is_null($checkCif)){
+            $_errors['cif'] = $checkCif;
+        }
+        else{
+            $model = new \Com\Daw2\Models\ProveedorModel();
+            $proveedorAux = $model->loadProveedor($_data['cif']);
+            if(!is_null($proveedorAux)){
+                $_errors['cif'] = "Ya existe un proveedor con ese cif";
+            }
+        }
+        
+        
+        $_campos = array(
+            'codigo' => 10,
+            'nombre' => 255,
+            'direccion' => 255,
+            'website' => 255,
+            'email' => 255,
+            'telefono' => 255
+        );
+        
+        foreach($_campos as $key => $value){
+            if(strlen($_data[$key]) > $value){
+                $_errors[$key] = "El tamaño máximo permito es $value";
+            }
+            elseif(empty($_data[$key])){
+                $_errors[$key] = "Inserte un texto";
+            }
+        }
+        
+        /*if(strlen($_data['codigo']) > 10){
+            $_errors['codigo'] = "El tamaño máximo del código es 10.";
+        }
+        elseif(empty($_data['codigo'])){
+            $_errors['codigo'] = "Inserte un código";
+        }
+        
+        if(strlen($_data['nombre']) > 255){
+            $_errors['nombre'] = "El tamaño máximo del nombre es 10.";
+        }
+        elseif(empty($_data['nombre'])){
+            $_errors['nombre'] = "Inserte un nombre";
+        }
+        
+        if(strlen($_data['direccion']) > 255){
+            $_errors['direccion'] = "El tamaño máximo de la dirección es 255.";
+        }
+        elseif(empty($_data['direccion'])){
+            $_errors['direccion'] = "Inserte un nombre";
+        }*/
+        
+        if(!filter_var($_data['website'], FILTER_VALIDATE_URL)){
+            $_errors['website'] = 'Debe insertar una URL válida';
+        }
+        if(!filter_var($_data['email'], FILTER_VALIDATE_EMAIL)){
+            $_errors['email'] = 'Debe insertar un email válido';
+        }
+        if(!preg_match("/^[0-9]{9,12}$/", $_data['telefono'])){
+            $_errors['telefono'] = 'Inserte un teléfono de tamaño entre 9 y 12 dígitos';
+        }
+        if(!in_array($_data['pais'], self::$_PAISES_VALIDOS)){
+            $_errors['pais'] = 'País no válido';
+        }
+        return $_errors;
+    }
+    
+    private static function checkCif(string $cif) : ?string{
+        if(strlen($cif) != 9){
+            return "La longitud del CIF debe ser de 9 caracteres";
+        }
+        elseif(!preg_match("/[A-S][0-9]{7}[A-Z0-9]/", $cif)){
+            return "Formato del CIF: 'OPPNNNNNC'. O: Tipo de Organización  ; P: Código provincia  ; N: Número correlativo por provincia ; C: Dígito o letra de control. Recibido: ". $cif;
+        }
+        elseif($cif[1] == "0" && $cif[2] == 0){
+            return "El código de provincia 00 no es válido.";
+        }
+        else{
+            if($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S"){
+                if(!preg_match("/[A-Z]/", $cif[8])){
+                    return "Código de control no válido. Se esperaba una letra.";
+                }
+                elseif($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S"){
+                    if(!is_numeric($cif[8])){
+                        return "Código de control no válido. Se esperaba un número.";
+                    }
+                }
+            }
+        }
+        return NULL;
+    }
+    
+    private static function sanitizeForm(array $_data) : array{
+        return filter_var_array($_data, FILTER_SANITIZE_SPECIAL_CHARS);
     }
 }
