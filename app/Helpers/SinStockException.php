@@ -1,6 +1,6 @@
 <?php
 
-namespace Com\Daw2;
+namespace Com\Daw2\Helpers;
 /*
  * IES Pazo da Mercé
  * Desenvolvemento Web Contorno Servidor

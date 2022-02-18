@@ -170,20 +170,29 @@ class TestController extends \Com\Daw2\Core\BaseController{
     }
     
     public function generateProductos(){
+        $modelProveedores = new \Com\Daw2\Models\ProveedorModel();
+        $_proveedores = $modelProveedores->getAll();
+        $modelCategorias = new \Com\Daw2\Models\CategoriaModel();
+        $_categorias = $modelCategorias->getAllCategorias();
+        $productosModel = new \Com\Daw2\Models\ProductoModel();
         $cantidad = 1027;
         $_marcas = ['Apple', 'Nintendo', 'Sony', 'Xiaomi', 'Google', 'LG', 'Samsung', 'Microsoft', 'IBM', 'Hitachi', 'Dell', 'Oppo', 'HP', 'Acer', 'MSI', 'Asus'];
         $_modelos = ['Mega', 'S', 'X', 'High', 'Series X', 'Series S', 'Reno', 'Max', 'Lite'];
         $descripción = "Inserte una descripción";
         for($i = 0; $i < $cantidad; $i++){
             $coste = random_int(1, 500);
-            $margen = rand() * 3 + 1;
+            $margen = (rand(1, 100) * 0.03) + 1;
             $stock = random_int(50, 300);
             $iva = 21;
-            $indexMarca = random_int(0, count($_marcas));
-            $indexModelo = random_int(0, count($_modelos));
+            $indexMarca = random_int(0, count($_marcas)-1);
+            $indexModelo = random_int(0, count($_modelos)-1);
             $codigoModelo = random_int(1, 99);
+            $indexProveedor = random_int(0, count($_proveedores) - 1);
+            $indexCategoria = random_int(0, count($_categorias) - 1);
             $nombre = $_marcas[$indexMarca]." - ".$_modelos[$indexModelo].$codigoModelo;
-            $codigo = substr($_marcas[$indexMarca], 0, 3);
+            $codigo = strtoupper(substr($_marcas[$indexMarca], 0, 3)). str_pad($i, 7, 0, STR_PAD_LEFT);
+            $pr = new \Com\Daw2\Helpers\Producto($codigo, $nombre, $descripción, $_proveedores[$indexProveedor], $_categorias[$indexCategoria], $stock, $coste, $margen, $iva);
+            $productosModel->insertProducto($pr);
         }
     }
 }

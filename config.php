@@ -15,8 +15,8 @@ $config->set('DEFAULT_ACTION', 'index');
 $config->set('DEBUG', TRUE);
 
 $config->set('dbhost', 'localhost');
-$config->set('dbname', 'demoUD4');
-$config->set('dbuser', 'admin');
-$config->set('dbpass', 'daw2pass');
+$config->set('dbname', 'CS_05_bbdd_con_registros');
+$config->set('dbuser', 'root');
+$config->set('dbpass', 'sabate');
 $config->set('dbcharset', 'utf8mb4');
 $config->set('emulado', false);
