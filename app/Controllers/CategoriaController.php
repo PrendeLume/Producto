@@ -127,7 +127,7 @@ class CategoriaController extends \Com\Daw2\Core\BaseController{
                 $padre = ($_POST['id_padre'] > 0) ? $model->loadCategoria($_POST['id_padre']) : NULL;
                 $categoria = new \Com\Daw2\Helpers\Categoria(NULL, $padre, filter_var($_POST['nombre'], FILTER_SANITIZE_SPECIAL_CHARS));
                 $categoria = $model->insertCategoriaObject($categoria);                 
-                $this->index();
+                header('location: ./?controller=categoria');
             }
             else{                                
                 $std = $this->sanitizeForm($_POST);
