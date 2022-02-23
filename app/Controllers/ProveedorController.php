@@ -53,12 +53,12 @@ class ProveedorController extends \Com\Daw2\Core\BaseController{
             $_errors = $this->checkForm($_POST);
             $saneado = $this->sanitizeForm($_POST);
             if(count($_errors) > 0){
-                $_vars = array('titulo' => 'Insertar proveedor',
+                $_vars = array(
                           'breadcumb' => array(
                             'Inicio' => array('url' => '#', 'active' => false),
                             'Proveedores' => array('url' => './?controller=proveedor','active' => false),
                             'Insertar' => array('url' => '#','active' => true)),
-                          'Título' => 'Alta proveedor',
+                          'titulo' => 'Alta proveedor',
                             'paises' => self::$_PAISES_VALIDOS,
                           'errors' => $_errors,
                           'edited' => (object) $saneado
