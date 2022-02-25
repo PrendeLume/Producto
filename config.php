@@ -9,14 +9,16 @@ $config->set('VIEWS_FOLDER', $config->get('APP_FOLDER').'Views/');
 $config->set('DATA_FOLDER', $config->get('APP_FOLDER').'Data/');
 
 $config->set('DEFAULT_CONTROLLER', 'Inicio');
-
 $config->set('DEFAULT_ACTION', 'index');
+
+$config->set('LOGIN_CONTROLLER', 'UsuarioSistema');
+$config->set('LOGIN_ACTION', 'login');
 
 $config->set('DEBUG', TRUE);
 
 $config->set('dbhost', 'localhost');
-$config->set('dbname', 'CS_05_bbdd_con_registros');
-$config->set('dbuser', 'root');
-$config->set('dbpass', 'sabate');
+$config->set('dbname', 'demoUD4');
+$config->set('dbuser', 'admin');
+$config->set('dbpass', 'daw2pass');
 $config->set('dbcharset', 'utf8mb4');
 $config->set('emulado', false);

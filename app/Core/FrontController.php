@@ -6,7 +6,11 @@ class FrontController {
 
     static function main() {
         $config = Config::getInstance();
-
+        session_start();
+        if(!isset($_SESSION['usuario'])){
+            $_GET['controller'] = $config->get('LOGIN_CONTROLLER');
+            $_GET['action'] = $config->get('LOGIN_ACTION');
+        }
         //Con el objetivo de no repetir nombre de clases
         //  nuestros controladores terminaran todos en Controller.
         //Por ej, la clase controladora Libros, será LibrosController

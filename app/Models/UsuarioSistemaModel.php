@@ -44,4 +44,63 @@ class UsuarioSistemaModel extends \Com\Daw2\Core\BaseModel{
         $stmt->execute([$email]);
         return $stmt->fetchAll();
     }
+    
+    public function insertUsuarioSistema(string $email, string $nombre, int $idRol, string $password) : bool{
+        $stmt = $this->db->prepare("INSERT INTO usuario_sistema (id_rol, email, pass, nombre, idioma, baja) VALUES(:id_rol, :email, :pass, :nombre, :idioma, :baja)");
+        $res = $stmt->execute([
+            'id_rol' => $idRol,
+            'email' => $email,
+            'nombre' => $nombre,
+            'pass' => password_hash($password, PASSWORD_DEFAULT),
+            'idioma' => 'es',
+            'baja' => 0
+        ]);
+        return $res;
+    }
+    
+    public function login(string $email, string $password) : ?array{
+        $_usuario = $this->getUsuarioSistemaByEmail($email)[0];
+        if(!empty($_usuario)){
+            if(password_verify($password, $_usuario['pass'])){
+                $_usuario['permisos'] = $this->getPermisos($_usuario['id_rol']);
+                return $_usuario;
+            }
+            else{
+                return NULL;
+            }
+        }
+        else{
+            return NULL;
+        }
+    }
+    
+    private function getPermisos(int $idRol) : array{
+        if($idRol === 1){
+            return array(
+                'UsuarioSistema' => 'rwd',
+                'Categoria' => 'rwd',
+                'Proveedor' => 'rwd',
+                'Usuario' => 'rwd'
+            );
+        }
+        elseif($idRol === 2){
+            return array(
+                'UsuarioSistema' => '',
+                'Categoria' => 'rwd',
+                'Proveedor' => 'rwd',
+                'Usuario' => 'rwd'  
+            );
+        }
+        elseif($idRol === 3){
+            return array(
+                'UsuarioSistema' => '',
+                'Categoria' => '',
+                'Proveedor' => 'rwd',
+                'Usuario' => 'rwd'  
+            );
+        }
+        else{
+            return [];
+        }
+    }
 }

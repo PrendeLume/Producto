@@ -48,7 +48,7 @@
  
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
-        <a class="nav-link" href="#" title="Logout">
+        <a class="nav-link" href="./?controller=UsuarioSistema&action=logout" title="Logout">
           <i class="text-danger fas fa-sign-out-alt"></i>          
         </a>        
       </li>
@@ -77,7 +77,7 @@
           <img src="assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Usuario</a>
+          <a href="#" class="d-block"><?php echo $_SESSION['usuario']['nombre']; ?></a>
         </div>
       </div>
       
@@ -104,7 +104,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="./?controller=usuarioSistema" class="nav-link">
+                  <i class="fas fa-users nav-icon"></i>
+                  <p>Usuarios</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./?controller=proveedor" class="nav-link">
                   <i class="fas fa-parachute-box nav-icon"></i>
                   <p>Proveedores</p>
                 </a>
