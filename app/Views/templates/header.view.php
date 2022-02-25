@@ -74,7 +74,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="assets/img/avatar<?php echo $_SESSION['usuario']['id_rol']; ?>.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block"><?php echo $_SESSION['usuario']['nombre']; ?></a>
@@ -103,24 +103,42 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
+              <?php
+              if(!empty($_SESSION['usuario']['permisos']['UsuarioSistema'])){
+              ?>
               <li class="nav-item">
                 <a href="./?controller=usuarioSistema" class="nav-link">
                   <i class="fas fa-users nav-icon"></i>
                   <p>Usuarios</p>
                 </a>
               </li>
+              <?php
+              }
+              ?>
+              <?php
+              if(!empty($_SESSION['usuario']['permisos']['Proveedor'])){
+              ?>
               <li class="nav-item">
                 <a href="./?controller=proveedor" class="nav-link">
                   <i class="fas fa-parachute-box nav-icon"></i>
                   <p>Proveedores</p>
                 </a>
               </li>
+              <?php
+              }
+              ?>
+              <?php
+              if(!empty($_SESSION['usuario']['permisos']['Categoria'])){
+              ?>
               <li class="nav-item">
                 <a href="./?controller=categoria" class="nav-link <?php echo (strpos($controller, 'CategoriaController') !== false ? 'active' : ''); ?>">
                   <i class="fas fa-cubes nav-icon"></i>
                   <p>Categorías</p>
                 </a>
               </li>
+              <?php
+              }
+              ?>
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="fas fa-cube nav-icon"></i>
