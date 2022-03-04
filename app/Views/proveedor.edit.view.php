@@ -151,7 +151,13 @@
                         </div></div>
                     <div class="card-footer">  
                         <a href="./?controller=<?php echo $_GET['controller']; ?>" name="action" class="btn btn-danger float-right " value="cancelar">Cancelar</a>
+                        <?php
+                        if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
+                        ?>                        
                         <button type="submit" name="action" class="btn btn-primary mr-3 float-right" value="guardar">Guardar</button>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </form>
             </div>

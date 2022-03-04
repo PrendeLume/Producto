@@ -39,7 +39,13 @@
         <div class="card shadow mb-4">
             <div
                 class="card-header">
+                <?php
+                if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
+                ?>
                 <a href="./?controller=proveedor&action=new" class="btn btn-outline-primary float-right">Nuevo proveedor</a>                              
+                <?php
+                }
+                ?>
             </div>
             <div class="card-body"> 
                 <?php if(count($data) > 0) { ?>
@@ -62,7 +68,15 @@
                             <td><?php echo $proveedor->nombre; ?></td>
                             <td><a href="<?php echo $proveedor->website; ?>" target="_blank"><?php echo $proveedor->website; ?></a></td>
                             <td><a href="mailto:<?php echo $proveedor->email; ?>"><?php echo $proveedor->email; ?></a></td>
-                            <td align="center"><a class="btn btn-clock btn-outline-primary" href="./?controller=proveedor&action=edit&cif=<?php echo $proveedor->cif; ?>"><i class="fas fa-edit"></i></a> <a class="btn btn-clock btn-outline-danger" href="./?controller=proveedor&action=delete&cif=<?php echo $proveedor->cif; ?>"><i class="fas fa-trash"></i></a></td>
+                            <td align="center"><a class="btn btn-clock btn-outline-primary" href="./?controller=proveedor&action=edit&cif=<?php echo $proveedor->cif; ?>"><i class="fas fa-edit"></i></a> 
+                                <?php
+                                if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')){
+                                ?>
+                                <a class="btn btn-clock btn-outline-danger" href="./?controller=proveedor&action=delete&cif=<?php echo $proveedor->cif; ?>"><i class="fas fa-trash"></i></a>
+                                <?php
+                                }
+                                ?>
+                            </td>
                         </tr>
                             <?php
                         }                    
