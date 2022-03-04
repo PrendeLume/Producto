@@ -33,7 +33,7 @@
                 <form action="./?controller=usuarioSistema&action=<?php echo $_GET['action']; ?>" method="post">
                     <div class="card-body">
                         <div class="row">
-                            <input type="hidden" name="id_usuario" value="" />
+                            <input type="hidden" name="id_usuario" value="<?php echo isset($original) ? $original['id_usuario'] : ''; ?>" />
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="nombre">Nombre:</label>

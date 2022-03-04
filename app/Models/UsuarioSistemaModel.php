@@ -45,6 +45,18 @@ class UsuarioSistemaModel extends \Com\Daw2\Core\BaseModel{
         return $stmt->fetchAll();
     }
     
+    public function getUsuarioSistemaByEmailNotUser(string $email, int $idUsuario) : array{
+        $stmt = $this->db->prepare("SELECT * FROM usuario_sistema WHERE email = ? AND id_usuario != ?");
+        $stmt->execute([$email, $idUsuario]);
+        return $stmt->fetchAll();
+    }
+    
+    public function getUsuarioSistemaById(int $id) : array{
+        $stmt = $this->db->prepare("SELECT * FROM usuario_sistema WHERE id_usuario = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetchAll();
+    }
+    
     public function insertUsuarioSistema(string $email, string $nombre, int $idRol, string $password) : bool{
         $stmt = $this->db->prepare("INSERT INTO usuario_sistema (id_rol, email, pass, nombre, idioma, baja) VALUES(:id_rol, :email, :pass, :nombre, :idioma, :baja)");
         $res = $stmt->execute([
@@ -56,6 +68,32 @@ class UsuarioSistemaModel extends \Com\Daw2\Core\BaseModel{
             'baja' => 0
         ]);
         return $res;
+    }
+    
+    public function updateUsuarioSistema(int $idUsuario, string $email, string $nombre, int $idRol, string $password = '') : bool{
+        if(empty($password)){
+            $sql = "UPDATE usuario_sistema SET id_rol=:id_rol, email=:email, nombre=:nombre WHERE id_usuario=:id_usuario";
+            $stmt = $this->db->prepare($sql);
+            $res = $stmt->execute([
+                'id_rol' => $idRol,
+                'email' => $email,
+                'nombre' => $nombre,
+                'id_usuario' => $idUsuario
+            ]);
+            return $res;
+        }
+        else{
+            $sql = "UPDATE usuario_sistema SET id_rol=:id_rol, email=:email, nombre=:nombre, pass=:pass WHERE id_usuario=:id_usuario";
+            $stmt = $this->db->prepare($sql);
+            $res = $stmt->execute([
+                'id_rol' => $idRol,
+                'email' => $email,
+                'nombre' => $nombre,
+                'id_usuario' => $idUsuario,
+                'pass' => password_hash($password, PASSWORD_DEFAULT)
+            ]);
+            return $res;
+        }
     }
     
     public function login(string $email, string $password) : ?array{
