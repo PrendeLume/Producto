@@ -73,7 +73,13 @@
                     <div class="card-footer">
                         
                         <button type="submit" name="action" class="btn btn-danger float-right " value="cancelar">Cancelar</button>
+                        <?php
+                        if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Categoria'], 'w')){
+                        ?>
                         <button type="submit" name="action" class="btn btn-primary mr-3 float-right" value="guardar">Guardar</button>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </form>
             </div>
