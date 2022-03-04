@@ -74,6 +74,11 @@ class UsuarioSistemaModel extends \Com\Daw2\Core\BaseModel{
         }
     }
     
+    public function getAllUsuarioSistema() : array{
+        $stmt = $this->db->query("SELECT * FROM usuario_sistema JOIN rol ON usuario_sistema.id_rol = rol.id_rol ORDER BY nombre");
+        return $stmt->fetchAll();
+    }
+    
     private function getPermisos(int $idRol) : array{
         if($idRol === 1){
             return array(

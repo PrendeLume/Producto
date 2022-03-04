@@ -41,8 +41,7 @@ class CategoriaController extends \Com\Daw2\Core\BaseController{
                             'Inicio' => array('url' => '#', 'active' => false),
                             'Categorias' => array('url' => '#','active' => true)),
                            'msg' => $msg,
-                          'Título' => 'Categorías',
-                          'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/categoria.index.js')
+                          'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/datatable.loader.js')
                 );
             $model =  new \Com\Daw2\Models\CategoriaModel();      
             $_vars["data"] = $model->getAllCategorias();

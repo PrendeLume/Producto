@@ -21,12 +21,34 @@
 
 namespace Com\Daw2\Controllers;
 
+use \Com\Daw2\Helpers\Mensaje;
+use \Com\Daw2\Helpers\Utils;
+
 /**
  * Description of UsuarioSistemaController
  *
  * @author rgcenteno
  */
 class UsuarioSistemaController extends \Com\Daw2\Core\BaseController{
+    
+    public function index(?Mensaje $msg = NULL)
+    {  
+        if(Utils::contains($_SESSION['usuario']['permisos']['UsuarioSistema'], 'r')){
+            $_vars = array('titulo' => 'Usuarios sistema',
+                          'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Usuarios sistema' => array('url' => '#','active' => true)),
+                           'msg' => $msg,
+                          'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/datatable.loader.js')
+                );
+            $model =  new \Com\Daw2\Models\UsuarioSistemaModel();      
+            $_vars["data"] = $model->getAllUsuarioSistema();
+            $this->view->showViews(array('templates/header.view.php', 'usuariosistema.index.php', 'templates/footer.view.php'), $_vars);      
+        }
+        else{
+            header("location: index.php");
+        }
+    }      
     
     public function new(){   
         if(strpos($_SESSION['usuario']['permisos']['UsuarioSistema'], 'w') !== false){
@@ -69,6 +91,10 @@ class UsuarioSistemaController extends \Com\Daw2\Core\BaseController{
         else{
             header("location: ./");
         }
+    }
+    
+    public function edit(){
+        echo 'Pendiente de hacer';
     }
     
     private function checkErrors(array $_data) : array{
