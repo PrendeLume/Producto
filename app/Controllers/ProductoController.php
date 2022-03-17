@@ -65,7 +65,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
         if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
             
             $model =  new \Com\Daw2\Models\ProductoModel();
-            if(isset($_POST['action'])){
+            if(isset($_POST['gardar'])){
                 $_errors = $this->checkForm($_POST);
                 $saneado = $this->sanitizeForm($_POST);
                 if(count($_errors) > 0){
