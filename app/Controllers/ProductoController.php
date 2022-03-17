@@ -49,6 +49,9 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
             $_vars["data"] = $model->getAll();
             $_vars["categorias"] = $model->getCategorias();
             $this->view->showViews(array('templates/header.view.php', 'producto.view.php', 'templates/footer.view.php'), $_vars);   
+            
+            //Filtro
+            
         }
         else{
             header("location: ./");

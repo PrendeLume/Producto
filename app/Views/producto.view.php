@@ -47,8 +47,11 @@
                 }
                 ?>
             </div>
-            <div class="card-body"> 
-            <div class="row">
+            <form action="/" method="get">
+                <input type="hidden" name="controller" value="<?php echo $_GET['controller']; ?>" />
+                <input type="hidden" name="action" value="<?php echo isset($_GET['action']) ? $_GET['action'] : ''; ?>" />
+                <div class="card-body"> 
+                    <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Proveedores</label>
@@ -83,9 +86,10 @@
                                 <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Nombre de usuario" value="<?php echo isset($_GET['codigo']) ? filter_var($_GET['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
                             </div>
                         </div>
-                               
+                                    
                     </div>
-                                </div>
+                </div>
+            </form>
             <div class="card-body"> 
                 <?php if(count($data) > 0) { ?>
                 <table id="categoriaTable" class="table table-bordered table-striped  dataTable">
