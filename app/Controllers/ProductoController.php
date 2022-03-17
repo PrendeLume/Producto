@@ -63,6 +63,8 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
     
     public function new(){
         if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
+            
+            $model =  new \Com\Daw2\Models\ProductoModel();
             if(isset($_POST['action'])){
                 $_errors = $this->checkForm($_POST);
                 $saneado = $this->sanitizeForm($_POST);
@@ -70,50 +72,53 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
                     $_vars = array(
                               'breadcumb' => array(
                                 'Inicio' => array('url' => '#', 'active' => false),
-                                'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                                'Producto' => array('url' => './?controller=producto','active' => false),
                                 'Insertar' => array('url' => '#','active' => true)),
-                              'titulo' => 'Alta proveedor',
-                                'paises' => self::$_PAISES_VALIDOS,
+                              'titulo' => 'Alta producto',
                               'errors' => $_errors,
                               'edited' => (object) $saneado
                     );
-                    $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
+                    
+            $_vars["data"] = $model->getAll();
+                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);      
                 }
                 else{
-                    $model = new \Com\Daw2\Models\ProveedorModel();
-                    $proveedor = new \Com\Daw2\Helpers\Proveedor($_POST['cif'], $saneado['codigo'], $saneado['nombre'], $saneado['direccion'], $_POST['website'], $_POST['pais'], $_POST['email']);
-                    $proveedor->telefono = $_POST['telefono'];
-                    if($model->insertProveedor($proveedor)){
-                        $msj = new Mensaje('success', 'Éxito', 'El proveedor ha sido guardado con éxito');
+                    $model = new \Com\Daw2\Models\ProductoModel();
+                    $producto = new \Com\Daw2\Helpers\Producto($_POST['codigo'], $saneado['nombre'], $saneado['descripcion'], $saneado['proveedor'], $_POST['coste'], $_POST['margen'], $_POST['stock'], $_POST['iva'], $_POST['id_categoria']);
+                    
+                    if($model->insertProveedor($producto)){
+                        $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
                         $this->index();
                     }
                     else{
-                        $_vars = array('titulo' => 'Insertar proveedor',
+                        $_vars = array('titulo' => 'Insertar producto',
                               'breadcumb' => array(
                                 'Inicio' => array('url' => '#', 'active' => false),
-                                'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                                'Producto' => array('url' => './?controller=producto','active' => false),
                                 'Insertar' => array('url' => '#','active' => true)),
-                              'Título' => 'Alta proveedor',
-                                'paises' => self::$_PAISES_VALIDOS,
+                              'Título' => 'Alta producto',
                               'edited' => (object) $saneado,
                             'errors' => array('cif' => 'Hubo un error indeterminado al guardar')
                         );
-                        $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars); 
+                        
+            $_vars["data"] = $model->getAll();
+                        $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars); 
                     }
                 }
             }
             else{
-                $_vars = array('titulo' => 'Insertar proveedor',
+                $_vars = array('titulo' => 'Insertar producto',
                               'breadcumb' => array(
                                 'Inicio' => array('url' => '#', 'active' => false),
-                                'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                                'Producto' => array('url' => './?controller=producto','active' => false),
                                 'Insertar' => array('url' => '#','active' => true)),
-                              'Título' => 'Alta proveedor',
-                              'paises' => self::$_PAISES_VALIDOS,
-                              'edited' => \Com\Daw2\Helpers\Proveedor::getStdClass()
+                              'Título' => 'Alta producto',
                     );
-                $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
+                    
+            $_vars["data"] = $model->getAll();
+                $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);      
             }
+            
         }
         else{
             header("location: ./");
@@ -125,24 +130,24 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
             if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
+                $model = new \Com\Daw2\Models\ProductoModel();
                 if(count($_errors) > 0){
-                    $model = new \Com\Daw2\Models\ProveedorModel();
-                    $proveedor = $model->loadProveedor($_POST['old_cif']);
-                    $_vars = array('titulo' => 'Edición de proveedor',
+                    
+                    $producto = $model->loadProveedor($_POST['old_cif']);
+                    $_vars = array('titulo' => 'Edición de producto',
                               'breadcumb' => array(
                                 'Inicio' => array('url' => '#', 'active' => false),
-                                'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                                'Producto' => array('url' => './?controller=producto','active' => false),
                                 'Edición' => array('url' => '#','active' => true)),
-                              'Título' => 'Editar proveedor',
+                              'Título' => 'Editar producto',
                                 'paises' => self::$_PAISES_VALIDOS,
                               'errors' => $_errors,
                               'edited' => (object) $sanitizado,
-                              'proveedorOriginal' => $proveedor
+                              'productoOriginal' => $producto
                     );
-                    $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);      
+                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);      
                 }
                 else{
-                    $model = $model = new \Com\Daw2\Models\ProveedorModel();
                     $proveedor = new \Com\Daw2\Helpers\Proveedor($_POST['cif'], $sanitizado['codigo'], $sanitizado['nombre'], $sanitizado['direccion'], $_POST['website'], $_POST['pais'], $_POST['email']);
                     $proveedor->telefono = $_POST['telefono'];
                     if($model->editProveedor($proveedor, $_POST['old_cif'])){
@@ -150,19 +155,19 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
                         $this->index($msj);
                     }
                     else{
-                        $proveedor = $model->loadProveedor($_POST['old_cif']);
-                        $_vars = array('titulo' => 'Edición de proveedor',
+                        $producto = $model->loadProveedor($_POST['old_cif']);
+                        $_vars = array('titulo' => 'Edición de producto',
                               'breadcumb' => array(
                                 'Inicio' => array('url' => '#', 'active' => false),
-                                'Proveedores' => array('url' => './?controller=proveedor','active' => false),
+                                'Producto' => array('url' => './?controller=producto','active' => false),
                                 'Edición' => array('url' => '#','active' => true)),
-                              'Título' => 'Editar proveedor',
+                              'Título' => 'Editar producto',
                                 'paises' => self::$_PAISES_VALIDOS,
                               'errors' => $_errors,
                               'edited' => (object) $sanitizado,
-                              'proveedorOriginal' => $proveedor
+                              'productoOriginal' => $proveedor
                                 );
-                        $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars); 
+                        $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars); 
                     }
                 }
             }
@@ -183,7 +188,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
                                       'Título' => 'Editar proveedor',
                                       'paises' => self::$_PAISES_VALIDOS,
                                       'edited' => $proveedor,
-                                      'proveedorOriginal' => $proveedor
+                                      'productoOriginal' => $proveedor
                             );
                     $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);    
                 }

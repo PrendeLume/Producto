@@ -122,6 +122,7 @@ class UsuarioSistemaModel extends \Com\Daw2\Core\BaseModel{
             return array(
                 'UsuarioSistema' => 'rwd',
                 'Categoria' => 'rwd',
+                'Producto' => 'rwd',
                 'Proveedor' => 'rwd',
                 'Usuario' => 'rwd'
             );
@@ -130,6 +131,7 @@ class UsuarioSistemaModel extends \Com\Daw2\Core\BaseModel{
             return array(
                 'UsuarioSistema' => '',
                 'Categoria' => 'rwd',
+                'Producto' => 'rwd',
                 'Proveedor' => 'rwd',
                 'Usuario' => 'rwd'  
             );
@@ -138,6 +140,7 @@ class UsuarioSistemaModel extends \Com\Daw2\Core\BaseModel{
             return array(
                 'UsuarioSistema' => '',
                 'Categoria' => '',
+                'Producto' => 'rwd',
                 'Proveedor' => 'rwd',
                 'Usuario' => 'rwd'  
             );

@@ -42,7 +42,7 @@
                 <?php
                 if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
                 ?>
-                <a href="./?controller=proveedor&action=new" class="btn btn-outline-primary float-right">Nuevo producto</a>                              
+                <a href="./?controller=producto&action=new" class="btn btn-outline-primary float-right">Nuevo producto</a>                              
                 <?php
                 }
                 ?>
@@ -120,7 +120,7 @@
                             <td><?php echo $data[$i]['nombre_categoria'];  ?></td>
                             <td><?php echo $data[$i]['stock'];  ?></td>
                             <td><?php echo $data[$i]['coste']*$data[$i]['margen'] * (1 + $data[$i]['iva']/100);  ?></td>
-                            <td align="center"><a class="btn btn-clock btn-outline-primary" href="./?controller=proveedor&action=edit&cif=<?php echo $data[$i]['nombre'];  ?>"><i class="fas fa-edit"></i></a> 
+                            <td align="center"><a class="btn btn-clock btn-outline-primary" href="./?controller=producto&action=edit&codigo=<?php echo $data[$i]['codigo'];  ?>"><i class="fas fa-edit"></i></a> 
                                 <?php
                                 if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')){
                                 ?>

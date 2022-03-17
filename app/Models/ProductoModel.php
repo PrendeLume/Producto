@@ -66,16 +66,13 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         $_categorias = $stmt->fetchAll();
         return $_categorias;
     }
-    public function loadProveedor(string $cif) : ?Proveedor{
-        $stmt = $this->db->prepare("SELECT * FROM proveedor WHERE cif = ?");
-        $stmt->execute([$cif]);
-        if($row = $stmt->fetch()){
-           return $this->rowToProveedor($row);
-        }        
-        return null;
+    public function cargarProducto(string $codigo) : array{
+        $stmt = $this->db->prepare("SELECT * FROM producto WHERE codigo = ?");
+        $stmt->execute([$codigo]);
+        return $stmt->fetch();        
     }
     
-    public function insertProveedor(Proveedor $p) : bool{
+    public function insertProducto(Producto $p) : bool{
         $stmt = $this->db->prepare("INSERT INTO proveedor (cif, codigo, nombre, direccion, website, pais, email, telefono) VALUES(:cif, :codigo, :nombre, :direccion, :website, :pais, :email, :telefono)");
         $resultado = $stmt->execute([
                 'cif' => $p->cif,
