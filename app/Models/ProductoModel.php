@@ -106,9 +106,9 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         return $resultado;
     }
     
-    public function delete(string $cif) : bool{
-        $stmt = $this->db->prepare("DELETE FROM proveedor WHERE cif = ?");
-        if($stmt->execute([$cif])){
+    public function delete(string $codigo) : bool{
+        $stmt = $this->db->prepare("DELETE FROM producto WHERE codigo = ?");
+        if($stmt->execute([$codigo])){
             return $stmt->rowCount() > 0;
         }
         else{

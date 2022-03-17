@@ -124,7 +124,7 @@
                                 <?php
                                 if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')){
                                 ?>
-                                <a class="btn btn-clock btn-outline-danger" href="./?controller=proveedor&action=delete&cif=<?php echo $data[$i]['nombre'];  ?>"><i class="fas fa-trash"></i></a>
+                                <a class="btn btn-clock btn-outline-danger" href="./?controller=producto&action=delete&codigo=<?php echo $data[$i]['codigo'];  ?>"><i class="fas fa-trash"></i></a>
                                 <?php
                                 }
                                 ?>

@@ -196,15 +196,15 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
     
     public function delete(){
         if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')){
-            $model = new \Com\Daw2\Models\ProveedorModel();
-            $cif = filter_var($_GET['cif'], FILTER_SANITIZE_STRING);
-            if(!empty($cif)){
+            $model = new \Com\Daw2\Models\ProductoModel();
+            $codigo = filter_var($_GET['codigo'], FILTER_SANITIZE_STRING);
+            if(!empty($codigo)){
                 try{
-                    if($model->delete($cif)){
-                        $this->index(new Mensaje("success", "¡Eliminada!", "Proveedor borrada con éxito"));
+                    if($model->delete($codigo)){
+                        $this->index(new Mensaje("success", "¡Eliminada!", "Producto borrada con éxito"));
                     }
                     else{
-                        $this->index(new Mensaje("warning", "Sin cambios", "No se ha borrado el proveedor: $cif"));
+                        $this->index(new Mensaje("warning", "Sin cambios", "No se ha borrado el proveedor: $codigo"));
                     }            
                 }
                 catch(\PDOException $ex){
@@ -217,7 +217,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
                 }
             }
             else{
-                $this->index(new Mensaje("warning", "Petición incorrecta", "No se ha facilitado la categoría a borrar"));
+                $this->index(new Mensaje("warning", "Petición incorrecta", "No se ha facilitado la codigo a borrar"));
             }
         }
         else{
