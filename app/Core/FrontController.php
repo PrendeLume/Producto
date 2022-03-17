@@ -34,9 +34,9 @@ class FrontController {
             throw new \Exception('No existe la clase: ' . $config->get('CONTROLLERS_NAMESPACE').$controller);
         }
         
-        if (!is_callable(array($controller, $action))) {
+        /*if (!is_callable(array($controller, $action))) {
             throw new \Exception($controller . '->' . $action . ' no existe');
-        }
+        }*/
 
         //Si todo esta bien, creamos una instancia del controlador
         //  y llamamos a la accion

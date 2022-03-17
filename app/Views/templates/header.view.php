@@ -140,7 +140,7 @@
               }
               ?>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="./?controller=producto" class="nav-link">
                   <i class="fas fa-cube nav-icon"></i>
                   <p>Productos</p>
                 </a>
