@@ -40,13 +40,14 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
             $_vars = array('titulo' => 'Productos',
                           'breadcumb' => array(
                             'Inicio' => array('url' => '#', 'active' => false),
-                            'Proveedores' => array('url' => '#','active' => true)),
+                            'Producto' => array('url' => '#','active' => true)),
                            'msg' => $msg,
-                          'Título' => 'Proveedores',
+                          'Título' => 'Productos',
                           'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/categoria.index.js')
                 );
             $model =  new \Com\Daw2\Models\ProductoModel();    
             $_vars["data"] = $model->getAll();
+            $_vars["categorias"] = $model->getCategorias();
             $this->view->showViews(array('templates/header.view.php', 'producto.view.php', 'templates/footer.view.php'), $_vars);   
         }
         else{

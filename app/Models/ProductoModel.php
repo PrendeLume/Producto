@@ -31,10 +31,17 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
     
     public function getAll() : array{
         $_res = array();
-        $stmt = $this->db->prepare("SELECT * FROM producto");
+        $stmt = $this->db->prepare("SELECT * FROM producto JOIN categoria ON producto.id_categoria = categoria.id_categoria");
         $stmt->execute();
         $_proveedores = $stmt->fetchAll();
         return $_proveedores;
+    }
+    public function getCategorias() : array{
+        $_res = array();
+        $stmt = $this->db->prepare("SELECT * FROM  categoria");
+        $stmt->execute();
+        $_categorias = $stmt->fetchAll();
+        return $_categorias;
     }
     
     public function loadProveedor(string $cif) : ?Proveedor{

@@ -48,6 +48,45 @@
                 ?>
             </div>
             <div class="card-body"> 
+            <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Proveedores</label>
+                                <select class="form-control select2bs4" name="tipo[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
+                                    <?php
+                                    foreach ($data as $row) {
+                                        ?>
+                                    <option value="<?php echo $row['proveedor']; ?>" <?php echo isset($_GET['tipo']) && in_array($row['proveedor'], $_GET['tipo'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['proveedor']); ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Categorias</label>
+                                <select class="form-control select2bs4" name="tipo[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
+                                    <?php
+                                    foreach ($categorias as $row) {
+                                        ?>
+                                    <option value="<?php echo $row['nombre_categoria']; ?>" <?php echo isset($_GET['tipo']) && in_array($row['nombre_categoria'], $_GET['tipo'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="codigo">codigo</label>
+                                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Nombre de usuario" value="<?php echo isset($_GET['codigo']) ? filter_var($_GET['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                            </div>
+                        </div>
+                               
+                    </div>
+                                </div>
+            <div class="card-body"> 
                 <?php if(count($data) > 0) { ?>
                 <table id="categoriaTable" class="table table-bordered table-striped  dataTable">
                     <thead>
@@ -69,7 +108,7 @@
                             <td><?php echo $data[$i]['codigo'];  ?></td>
                             <td><?php echo $data[$i]['nombre'];  ?></td>
                             <td><?php echo $data[$i]['proveedor'];  ?></td>
-                            <td><?php echo $data[$i]['id_categoria'];  ?></td>
+                            <td><?php echo $data[$i]['nombre_categoria'];  ?></td>
                             <td><?php echo $data[$i]['stock'];  ?></td>
                             <td><?php echo $data[$i]['coste']*$data[$i]['margen'] * (1 + $data[$i]['iva']/100);  ?></td>
                             <td align="center"><a class="btn btn-clock btn-outline-primary" href="./?controller=proveedor&action=edit&cif=<?php echo $data[$i]['nombre'];  ?>"><i class="fas fa-edit"></i></a> 
