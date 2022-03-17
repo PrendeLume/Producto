@@ -45,12 +45,11 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
                           'Título' => 'Productos',
                           'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/categoria.index.js')
                 );
-            $model =  new \Com\Daw2\Models\ProductoModel();    
-            $_vars["data"] = $model->getAll();
+            $model =  new \Com\Daw2\Models\ProductoModel();
             $_vars["categorias"] = $model->getCategorias();
+            $_vars["data"] = $model->getAll();
             $this->view->showViews(array('templates/header.view.php', 'producto.view.php', 'templates/footer.view.php'), $_vars);   
             
-            //Filtro
             
         }
         else{

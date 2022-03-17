@@ -55,11 +55,11 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Proveedores</label>
-                                <select class="form-control select2bs4" name="tipo[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
+                                <select class="form-control select2bs4" name="tipoProveedor[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
                                     <?php
                                     foreach ($data as $row) {
                                         ?>
-                                    <option value="<?php echo $row['proveedor']; ?>" <?php echo isset($_GET['tipo']) && in_array($row['proveedor'], $_GET['tipo'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['proveedor']); ?></option>
+                                    <option value="<?php echo $row['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($row['proveedor'], $_GET['tipoProveedor'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['proveedor']); ?></option>
                                         <?php
                                     }
                                     ?>
@@ -69,11 +69,11 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Categorias</label>
-                                <select class="form-control select2bs4" name="tipo[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
+                                <select class="form-control select2bs4" name="tipoCategoria[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
                                     <?php
                                     foreach ($categorias as $row) {
                                         ?>
-                                    <option value="<?php echo $row['nombre_categoria']; ?>" <?php echo isset($_GET['tipo']) && in_array($row['nombre_categoria'], $_GET['tipo'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                    <option value="<?php echo $row['nombre_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($row['nombre_categoria'], $_GET['tipoCategoria'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
                                         <?php
                                     }
                                     ?>
