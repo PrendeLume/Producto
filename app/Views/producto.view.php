@@ -47,7 +47,7 @@
                 }
                 ?>
             </div>
-            <form action="/" method="get">
+            <form action="./?controller=Producto" method="get">
                 <input type="hidden" name="controller" value="<?php echo $_GET['controller']; ?>" />
                 <input type="hidden" name="action" value="<?php echo isset($_GET['action']) ? $_GET['action'] : ''; ?>" />
                 <div class="card-body"> 
@@ -89,6 +89,11 @@
                                     
                     </div>
                 </div>
+                <div class="card-footer">  
+                        <a href="./?controller=Producto" class="btn btn-danger float-left " value="reset">Resetear</a>                      
+                        <button type="submit" name="filtrar" class="btn btn-primary ml-3 float-left" value="filtrar"><i class="fas fa-search"></i> Filtrar</button>
+                        
+                    </div>  
             </form>
             <div class="card-body"> 
                 <?php if(count($data) > 0) { ?>

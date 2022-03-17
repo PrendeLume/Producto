@@ -47,7 +47,11 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
                 );
             $model =  new \Com\Daw2\Models\ProductoModel();
             $_vars["categorias"] = $model->getCategorias();
+            
             $_vars["data"] = $model->getAll();
+            if(isset($_GET['filtrar'])){
+                $_vars["data"] = $model->getAllFilter($_GET);
+            }
             $this->view->showViews(array('templates/header.view.php', 'producto.view.php', 'templates/footer.view.php'), $_vars);   
             
             

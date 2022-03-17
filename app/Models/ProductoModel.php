@@ -44,21 +44,21 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         return $_categorias;
     }
     public function getAllFilter(array $_filtros) : array{
-        $query = "SELECT * FROM  categoria WHERE 1 = 1";
+        $query = "SELECT * FROM  producto JOIN categoria ON producto.id_categoria = categoria.id_categoria WHERE 1 = 1";
 
-        if(isset($_filtros['codigo'])){
-            $query.= " AND codigo = ".$_filtros['codigo'];
+        if(!empty($_filtros['codigo'])){
+            $query.= " AND codigo LIKE". "'%".$_filtros['codigo']."%'";
         }
         if(isset($_filtros['tipoProveedor']) && is_array($_filtros['tipoProveedor'])){
             for ($i=0; $i < count($_filtros['tipoProveedor']); $i++) { 
                 
-                $query.= " AND codigo = ".$_filtros['tipoProveedor'][$i];
+                $query.= " AND proveedor = "."'".$_filtros['tipoProveedor'][$i]."'";
             }
         }
         if(isset($_filtros['tipoCategoria']) && is_array($_filtros['tipoCategoria'])){
             for ($i=0; $i < count($_filtros['tipoCategoria']); $i++) { 
                 
-                $query.= " AND codigo = ".$_filtros['tipoCategoria'][$i];
+                $query.= " AND nombre_categoria = "."'".$_filtros['tipoCategoria'][$i]."'";
             }
         }
         $stmt = $this->db->prepare($query);
