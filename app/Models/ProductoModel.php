@@ -78,7 +78,7 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         $_categorias = $stmt->fetchAll();
         return $_categorias;
     }
-    public function cargarProducto(string $codigo) : array{
+    public function cargarProducto(string $codigo){
         $stmt = $this->db->prepare("SELECT * FROM producto WHERE codigo = ?");
         $stmt->execute([$codigo]);
         return $stmt->fetch();        
@@ -102,7 +102,7 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
     
     public function editProducto(array $p, string $oldCodigo) : bool{
         $stmt = $this->db->prepare("UPDATE producto SET codigo=:codigo, nombre=:nombre, descripcion=:descripcion, proveedor=:proveedor, coste=:coste, margen=:margen, stock=:stock, iva=:iva, id_categoria=:id_categoria WHERE codigo=:old_codigo");
-        var_dump($p);
+       
         $resultado = $stmt->execute([
                 'codigo' => $p['codigo'],
                 'nombre'=> $p['nombre'],

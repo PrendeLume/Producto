@@ -63,8 +63,10 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             $model = new \Com\Daw2\Models\ProductoModel();
             if (isset($_POST['gardar'])) {
                 $_errors = $this->checkForm($_POST);
+                
+                    var_dump($_errors);
                 $sanitizado = $this->sanitizeForm($_POST);
-                if (count($_errors) > 0) {
+                if (count($_errors)> 0) {
                     $_vars = array(
                         'breadcumb' => array(
                             'Inicio' => array('url' => '#', 'active' => false),
@@ -72,7 +74,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                             'Insertar' => array('url' => '#', 'active' => true)),
                         'titulo' => 'Alta producto',
                         'errors' => $_errors,
-                        'data' => $saneado
+                        'data' => $sanitizado
                     );
 
                     $this->view->showViews(array('templates/header.view.php', 'producto.insert.view.php', 'templates/footer.view.php'), $_vars);
@@ -81,8 +83,9 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                     $producto = array('codigo' =>$_POST['codigo'],'nombre'=> $sanitizado['nombre'],'descripcion'=> $sanitizado['descripcion'],'coste'=> $sanitizado['coste'],'margen'=> $_POST['margen'], 'stock'=>$_POST['stock'], 'iva'=> $_POST['iva'],'tipoProveedor'=> $sanitizado['proveedor'],'tipoCategoria'=> $sanitizado['categoria']);
                    
                     if ($model->insertProducto($producto)) {
+                        
                         $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
-                        $this->index();
+                        $this->index($msj);
                     } else {
                         $_vars = array('titulo' => 'Insertar producto',
                             'breadcumb' => array(
@@ -90,7 +93,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                                 'Producto' => array('url' => './?controller=producto', 'active' => false),
                                 'Insertar' => array('url' => '#', 'active' => true)),
                             'Título' => 'Alta producto',
-                            'edited' => $saneado,
+                            'data' => $sanitizado,
                             'errors' => array('codigo' => 'Hubo un error indeterminado al guardar')
                         );
 
@@ -227,7 +230,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
         $checkCodigo = self::checkCodigo($_data['codigo']);
         if (!is_null($checkCodigo)) {
             $_errors['codigo'] = $checkCodigo;
-        } else {
+        } else if(isset($_data['old_codigo'])){
             if (empty($_data['old_codigo'])) {
                 $model = new \Com\Daw2\Models\ProductoModel();
                 $ProductoAux = $model->cargarProducto($_data['codigo']);
