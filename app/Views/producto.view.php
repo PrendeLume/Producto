@@ -141,7 +141,7 @@
                     ?>
                     <div class="callout callout-info">
                       <h5>Sin Proveedores</h5>
-                      <p>No existen proveedores dados de alta que cumplan los requisitos. Pulse aquí para <a href="?controller=proveedor&action=new">crear un nuevo proveedor.</a></p>
+                      <p>No existen proveedores dados de alta que cumplan los requisitos. Pulse aquí para <a href="?controller=producto&action=new">crear un nuevo producto.</a></p>
                     </div>
                 <?php
                 }

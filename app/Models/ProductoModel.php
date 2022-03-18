@@ -84,17 +84,18 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         return $stmt->fetch();        
     }
     
-    public function insertProducto(Producto $p) : bool{
-        $stmt = $this->db->prepare("INSERT INTO proveedor (cif, codigo, nombre, direccion, website, pais, email, telefono) VALUES(:cif, :codigo, :nombre, :direccion, :website, :pais, :email, :telefono)");
+    public function insertProducto(array $p) : bool{
+        $stmt = $this->db->prepare("INSERT INTO producto (codigo, nombre, descripcion, proveedor, coste, margen,stock, iva, id_categoria) VALUES(:codigo, :nombre, :descripcion, :proveedor, :coste, :margen, :stock, :iva, :id_categoria)");
         $resultado = $stmt->execute([
-                'cif' => $p->cif,
-                'codigo'=> $p->codigo,
-                'nombre' => $p->nombre,
-                'direccion' => $p->direccion,
-                'website' => $p->website,
-                'pais' => $p->pais,
-                'email' => $p->email,
-                'telefono' => $p->telefono
+                'codigo' => $p['codigo'],
+                'nombre'=> $p['nombre'],
+                'descripcion' => $p['descripcion'],
+                'proveedor' => $p['tipoProveedor'],
+                'coste' => $p['coste'],
+                'margen' => $p['margen'],
+                'stock' => $p['stock'],
+                'iva' => $p['iva'],
+                'id_categoria' => $p['tipoCategoria']
         ]);
         return $resultado;
     }

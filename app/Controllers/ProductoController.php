@@ -63,7 +63,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             $model = new \Com\Daw2\Models\ProductoModel();
             if (isset($_POST['gardar'])) {
                 $_errors = $this->checkForm($_POST);
-                $saneado = $this->sanitizeForm($_POST);
+                $sanitizado = $this->sanitizeForm($_POST);
                 if (count($_errors) > 0) {
                     $_vars = array(
                         'breadcumb' => array(
@@ -72,16 +72,15 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                             'Insertar' => array('url' => '#', 'active' => true)),
                         'titulo' => 'Alta producto',
                         'errors' => $_errors,
-                        'edited' => (object) $saneado
+                        'data' => $saneado
                     );
 
-                    $_vars["data"] = $model->getAll();
-                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
+                    $this->view->showViews(array('templates/header.view.php', 'producto.insert.view.php', 'templates/footer.view.php'), $_vars);
                 } else {
                     $model = new \Com\Daw2\Models\ProductoModel();
-                    $producto = new \Com\Daw2\Helpers\Producto($_POST['codigo'], $saneado['nombre'], $saneado['descripcion'], $saneado['proveedor'], $_POST['coste'], $_POST['margen'], $_POST['stock'], $_POST['iva'], $_POST['id_categoria']);
-
-                    if ($model->insertProveedor($producto)) {
+                    $producto = array('codigo' =>$_POST['codigo'],'nombre'=> $sanitizado['nombre'],'descripcion'=> $sanitizado['descripcion'],'coste'=> $sanitizado['coste'],'margen'=> $_POST['margen'], 'stock'=>$_POST['stock'], 'iva'=> $_POST['iva'],'tipoProveedor'=> $sanitizado['proveedor'],'tipoCategoria'=> $sanitizado['categoria']);
+                   
+                    if ($model->insertProducto($producto)) {
                         $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
                         $this->index();
                     } else {
@@ -91,12 +90,11 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                                 'Producto' => array('url' => './?controller=producto', 'active' => false),
                                 'Insertar' => array('url' => '#', 'active' => true)),
                             'Título' => 'Alta producto',
-                            'edited' => (object) $saneado,
-                            'errors' => array('cif' => 'Hubo un error indeterminado al guardar')
+                            'edited' => $saneado,
+                            'errors' => array('codigo' => 'Hubo un error indeterminado al guardar')
                         );
 
-                        $_vars["data"] = $model->getAll();
-                        $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
+                        $this->view->showViews(array('templates/header.view.php', 'producto.insert.view.php', 'templates/footer.view.php'), $_vars);
                     }
                 }
             } else {
@@ -108,8 +106,10 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                     'Título' => 'Alta producto',
                 );
 
-                $_vars["data"] = $model->getAll();
-                $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
+                    $_vars["proveedores"] = $model->getProveedor();
+                    
+                    $_vars["categorias"] = $model->getCategorias();
+                $this->view->showViews(array('templates/header.view.php', 'producto.insert.view.php', 'templates/footer.view.php'), $_vars);
             }
         } else {
             header("location: ./");

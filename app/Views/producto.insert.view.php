@@ -66,10 +66,8 @@
                         ?>
                     </h3>                
                 </div>
-                <form action="./?controller=Producto&action=edit" method="post">
-                    <input type="hidden" name="old_codigo" value="<?php if (isset($productoOriginal)) {
-                            echo $productoOriginal['codigo'];
-                        } ?>"/>
+                <form action="./?controller=Producto&action=new" method="post">
+                    
                     <input type="hidden" name="controller" value="<?php echo $_GET['controller']; ?>" />
                     <input type="hidden" name="action" value="<?php echo isset($_GET['action']) ? $_GET['action'] : ''; ?>" />
                     <div class="card-body"> 
@@ -127,37 +125,37 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="nombre">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo filter_var($data['nombre'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo isset($_GET['nombre']) ? filter_var($data['nombre'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="descripcion">Descirpcion</label>
-                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo filter_var($data['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo isset($_GET['descripcion']) ? filter_var($data['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS):""; ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="coste">Coste</label>
-                                    <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo filter_var($data['coste'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo isset($_GET['coste']) ? filter_var($data['coste'], FILTER_SANITIZE_SPECIAL_CHARS):""; ?>" />
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="margen">Margen</label>
-                                    <input type="text" class="form-control" id="margen" name="margen" placeholder="margen" value="<?php echo filter_var($data['margen'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="margen" name="margen" placeholder="margen" value="<?php echo isset($_GET['margen']) ? filter_var($data['margen'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="stock">Stock</label>
-                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="<?php echo filter_var($data['stock'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="<?php echo isset($_GET['stock']) ? filter_var($data['stock'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="iva">IVA</label>
-                                    <input type="text" class="form-control" id="iva" name="iva" placeholder="iva" readonly value="<?php echo filter_var($data['iva'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="iva" name="iva" placeholder="iva" value="<?php echo isset($_GET['iva']) ? filter_var($data['iva'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                 </div>
                             </div>
 
