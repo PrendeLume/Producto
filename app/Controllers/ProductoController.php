@@ -118,7 +118,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
     }
 
     public function edit() {
-        if (isset($_POST['action'])) {
+        if (isset($_POST['gardar'])) {
             if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')) {
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
@@ -178,6 +178,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                         'edited' => $producto,
                         'productoOriginal' => $producto
                     );
+                    $_vars["proveedores"] = $model->getProveedor();
                     
                     $_vars["categorias"] = $model->getCategorias();
                     $_vars["data"] = $model->getAllFilter($_GET);

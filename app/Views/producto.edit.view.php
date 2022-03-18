@@ -73,11 +73,18 @@
                                 <div class="form-group">
                                     <label>Proveedor</label>
                                     <select class="form-control select2bs4" name="tipoProveedor[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
+                                        <option value="<?php echo $data[0]['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($data[0]['proveedor'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data[0]['proveedor']); ?></option>
+                                            
                                         <?php
-                                        foreach ($data as $row) {
+                                        foreach ($proveedores as $row) {
+                                            if($row['cif'] == $data[0]['cif']){
+                                                
+                                            }else{
                                             ?>
-                                            <option value="<?php echo $row['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($row['proveedor'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($row['proveedor']); ?></option>
-                                            <?php
+                                        
+                                        <option value="<?php echo $row['cif']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($row['cif'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($row['cif']); ?></option>
+                                        <?php
+                                            }
                                         }
                                         ?>
                                     </select>
@@ -151,7 +158,7 @@
                     </div>
                     <div class="card-footer">  
                         <a href="./?controller=Producto" class="btn btn-danger float-left " value="reset">Resetear</a>                      
-                        <button type="submit" name="gardar" class="btn btn-primary ml-3 float-left" value="filtrar"><i class="fas fa-search"></i> Gardar</button>
+                        <button type="submit" name="gardar" class="btn btn-primary ml-3 float-left" value="gardar"><i class="fas fa-search"></i> Gardar</button>
 
                     </div>  
                 </form>
