@@ -36,7 +36,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
      * Sin emulado obtenemos que los números se reciben como float
      */
     public function index(?Mensaje $msg = NULL) {
-        if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'r')) {
+        if (Utils::contains($_SESSION['usuario']['permisos']['Producto'], 'r')) {
             $_vars = array('titulo' => 'Productos',
                 'breadcumb' => array(
                     'Inicio' => array('url' => '#', 'active' => false),
@@ -58,7 +58,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
     }
 
     public function new() {
-        if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')) {
+        if (Utils::contains($_SESSION['usuario']['permisos']['Producto'], 'w')) {
 
             $model = new \Com\Daw2\Models\ProductoModel();
             if (isset($_POST['gardar'])) {
@@ -119,7 +119,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
     public function edit() {
         if (isset($_POST['gardar'])) {
             
-            if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')) {
+            if (Utils::contains($_SESSION['usuario']['permisos']['Producto'], 'w')) {
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
                 $model = new \Com\Daw2\Models\ProductoModel();
@@ -164,7 +164,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 header("location: ./");
             }
         } elseif (isset($_GET['codigo'])) {
-            if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'r')) {
+            if (Utils::contains($_SESSION['usuario']['permisos']['Producto'], 'r')) {
                 $model = new \Com\Daw2\Models\ProductoModel();
                 $producto = $model->cargarProducto($_GET['codigo']);
                 if (!empty($producto)) {
@@ -174,7 +174,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                             'Productos' => array('url' => './?controller=producto', 'active' => false),
                             'Edición' => array('url' => '#', 'active' => true)),
                         'Título' => 'Editar producto',
-                        'edited' => $producto,
+                        'data' => $producto,
                         'productoOriginal' => $producto
                     );
                     $_vars["proveedores"] = $model->getProveedor();
@@ -191,15 +191,19 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
     }
 
     public function delete() {
-        if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')) {
+        if (Utils::contains($_SESSION['usuario']['permisos']['Producto'], 'd')) {
             $model = new \Com\Daw2\Models\ProductoModel();
-            $codigo = filter_var($_GET['codigo'], FILTER_SANITIZE_STRING);
+            $codigo = filter_var($_GET['codigo_del'], FILTER_SANITIZE_STRING);
             if (!empty($codigo)) {
                 try {
+                    
                     if ($model->delete($codigo)) {
                         $this->index(new Mensaje("success", "¡Eliminada!", "Producto borrada con éxito"));
+
+                        header("location: ./?controller=producto&action=index");
+                        die;
                     } else {
-                        $this->index(new Mensaje("warning", "Sin cambios", "No se ha borrado el proveedor: $codigo"));
+                        $this->index(new Mensaje("warning", "Sin cambios", "No se ha borrado el producto: $codigo"));
                     }
                 } catch (\PDOException $ex) {
                     if (strpos($ex->getMessage(), '1451') !== false) {

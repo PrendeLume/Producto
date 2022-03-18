@@ -73,7 +73,7 @@
                                     <?php
                                     foreach ($categorias as $row) {
                                         ?>
-                                    <option value="<?php echo $row['nombre_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($row['nombre_categoria'], $_GET['tipoCategoria'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                    <option value="<?php echo $row['id_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($row['nombre_categoria'], $_GET['tipoCategoria'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
                                         <?php
                                     }
                                     ?>
@@ -124,7 +124,7 @@
                                 <?php
                                 if(\Com\Daw2\Helpers\Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')){
                                 ?>
-                                <a class="btn btn-clock btn-outline-danger" href="./?controller=producto&action=delete&codigo=<?php echo $data[$i]['codigo'];  ?>"><i class="fas fa-trash"></i></a>
+                                <a class="btn btn-clock btn-outline-danger" href="./?controller=producto&action=delete&codigo_del=<?php echo $data[$i]['codigo'];  ?>"><i class="fas fa-trash"></i></a>
                                 <?php
                                 }
                                 ?>

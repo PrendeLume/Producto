@@ -96,7 +96,7 @@
                                     <label>Categorias</label>
                                     <select class="form-control select2bs4" name="tipoCategoria[]" data-placeholder="Seleccione un tipo">                                    
 
-                                        <option value="<?php echo $data['id_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($data[0]['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($data[0]['nombre_categoria']); ?></option>
+                                        <option value="<?php echo $data['id_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($data['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($data['nombre_categoria']); ?></option>
                                         <?php
                                         foreach ($categorias as $row) {
                                             if($row['nombre_categoria'] == $data['nombre_categoria']){
