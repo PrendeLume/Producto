@@ -18,7 +18,7 @@ $config->set('DEBUG', TRUE);
 
 $config->set('dbhost', 'localhost');
 $config->set('dbname', 'demoud4');
-$config->set('dbuser', 'root');
-$config->set('dbpass', '');
+$config->set('dbuser', 'admin');
+$config->set('dbpass', 'daw2pass');
 $config->set('dbcharset', 'utf8mb4');
 $config->set('emulado', false);

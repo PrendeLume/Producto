@@ -29,9 +29,9 @@ use Com\Daw2\Helpers\Proveedor;
  */
 class ProductoModel extends \Com\Daw2\Core\BaseModel{
     
-    public function getAll() : array{
+    public function getProveedor() : array{
         $_res = array();
-        $stmt = $this->db->prepare("SELECT * FROM producto JOIN categoria ON producto.id_categoria = categoria.id_categoria");
+        $stmt = $this->db->prepare("SELECT * FROM proveedor");
         $stmt->execute();
         $_proveedores = $stmt->fetchAll();
         return $_proveedores;
@@ -50,16 +50,28 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
             $query.= " AND codigo LIKE". "'%".$_filtros['codigo']."%'";
         }
         if(isset($_filtros['tipoProveedor']) && is_array($_filtros['tipoProveedor'])){
+            $query.=" AND (";
             for ($i=0; $i < count($_filtros['tipoProveedor']); $i++) { 
+                if($i == 0){
+                    $query.= "proveedor = "."'".$_filtros['tipoProveedor'][$i]."'";
+                }else{
+                    $query.= " OR proveedor = "."'".$_filtros['tipoProveedor'][$i]."'";
+                }
                 
-                $query.= " AND proveedor = "."'".$_filtros['tipoProveedor'][$i]."'";
             }
+            $query.=" )";
         }
         if(isset($_filtros['tipoCategoria']) && is_array($_filtros['tipoCategoria'])){
+            $query.=" AND (";
             for ($i=0; $i < count($_filtros['tipoCategoria']); $i++) { 
+                if($i == 0){
+                    $query.= "nombre_categoria = "."'".$_filtros['tipoCategoria'][$i]."'";
+                }else{
+                    $query.= " OR nombre_categoria = "."'".$_filtros['tipoCategoria'][$i]."'";
+                }
                 
-                $query.= " AND nombre_categoria = "."'".$_filtros['tipoCategoria'][$i]."'";
             }
+            $query.=" )";
         }
         $stmt = $this->db->prepare($query);
         $stmt->execute();

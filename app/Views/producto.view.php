@@ -57,9 +57,9 @@
                                 <label>Proveedores</label>
                                 <select class="form-control select2bs4" name="tipoProveedor[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
                                     <?php
-                                    foreach ($data as $row) {
+                                    foreach ($proveedores as $row) {
                                         ?>
-                                    <option value="<?php echo $row['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($row['proveedor'], $_GET['tipoProveedor'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['proveedor']); ?></option>
+                                    <option value="<?php echo $row['cif']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($row['cif'], $_GET['tipoProveedor'])  ? 'selected' : ''; ?>><?php echo ucfirst($row['cif']); ?></option>
                                         <?php
                                     }
                                     ?>
