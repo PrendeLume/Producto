@@ -64,7 +64,8 @@
 } ?>
                     </h3>                
                 </div>
-                <form action="./?controller=Producto" method="get">
+                <form action="./?controller=Producto&action=edit" method="post">
+                    <input type="hidden" name="old_codigo" value="<?php  if (isset($productoOriginal)) {echo $productoOriginal['codigo'];}?>"/>
                     <input type="hidden" name="controller" value="<?php echo $_GET['controller']; ?>" />
                     <input type="hidden" name="action" value="<?php echo isset($_GET['action']) ? $_GET['action'] : ''; ?>" />
                     <div class="card-body"> 
@@ -73,11 +74,11 @@
                                 <div class="form-group">
                                     <label>Proveedor</label>
                                     <select class="form-control select2bs4" name="tipoProveedor[]" data-placeholder="Seleccione un tipo">                                    
-                                        <option value="<?php echo $data[0]['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($data[0]['proveedor'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data[0]['proveedor']); ?></option>
+                                        <option value="<?php echo $data['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($data['proveedor'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data['proveedor']); ?></option>
                                             
                                         <?php
                                         foreach ($proveedores as $row) {
-                                            if($row['cif'] == $data[0]['cif']){
+                                            if($row['cif'] == $data['cif']){
                                                 
                                             }else{
                                             ?>
@@ -95,15 +96,15 @@
                                     <label>Categorias</label>
                                     <select class="form-control select2bs4" name="tipoCategoria[]" data-placeholder="Seleccione un tipo">                                    
 
-                                        <option value="<?php echo $data[0]['nombre_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($data[0]['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($data[0]['nombre_categoria']); ?></option>
+                                        <option value="<?php echo $data['id_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($data[0]['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($data[0]['nombre_categoria']); ?></option>
                                         <?php
                                         foreach ($categorias as $row) {
-                                            if($row['nombre_categoria'] == $data[0]['nombre_categoria']){
+                                            if($row['nombre_categoria'] == $data['nombre_categoria']){
                                                 
                                             }else{
                                             ?>
                                         
-                                        <option value="<?php echo $row['nombre_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($row['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                        <option value="<?php echo $row['id_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($row['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
                                         <?php
                                             }
                                         }
@@ -120,37 +121,37 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="nombre">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo filter_var($data[0]['nombre'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo filter_var($data['nombre'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="descripcion">Descirpcion</label>
-                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo filter_var($data[0]['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo filter_var($data['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="coste">Coste</label>
-                                    <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo filter_var($data[0]['coste'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo filter_var($data['coste'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="margen">Margen</label>
-                                    <input type="text" class="form-control" id="margen" name="margen" placeholder="margen" value="<?php echo filter_var($data[0]['margen'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="margen" name="margen" placeholder="margen" value="<?php echo filter_var($data['margen'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="stock">Stock</label>
-                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="<?php echo filter_var($data[0]['stock'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="<?php echo filter_var($data['stock'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="iva">IVA</label>
-                                    <input type="text" class="form-control" id="iva" name="iva" placeholder="iva" readonly value="<?php echo filter_var($data[0]['iva'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <input type="text" class="form-control" id="iva" name="iva" placeholder="iva" readonly value="<?php echo filter_var($data['iva'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                                 </div>
                             </div>
 

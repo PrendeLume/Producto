@@ -99,18 +99,20 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         return $resultado;
     }
     
-    public function editProveedor(Producto $p, string $oldCif) : bool{
-        $stmt = $this->db->prepare("UPDATE producto SET cif=:cif, codigo=:codigo, nombre=:nombre, direccion=:direccion, website=:website, pais=:pais, email=:email, telefono=:telefono WHERE cif=:old_cif");
+    public function editProducto(array $p, string $oldCodigo) : bool{
+        $stmt = $this->db->prepare("UPDATE producto SET codigo=:codigo, nombre=:nombre, descripcion=:descripcion, proveedor=:proveedor, coste=:coste, margen=:margen, stock=:stock, iva=:iva, id_categoria=:id_categoria WHERE codigo=:old_codigo");
+        var_dump($p);
         $resultado = $stmt->execute([
-                'cif' => $p->cif,
-                'codigo'=> $p->codigo,
-                'nombre' => $p->nombre,
-                'direccion' => $p->direccion,
-                'website' => $p->website,
-                'pais' => $p->pais,
-                'email' => $p->email,
-                'telefono' => $p->telefono,
-                'old_cif' => $oldCif
+                'codigo' => $p['codigo'],
+                'nombre'=> $p['nombre'],
+                'descripcion' => $p['descripcion'],
+                'proveedor' => $p['tipoProveedor'],
+                'coste' => $p['coste'],
+                'margen' => $p['margen'],
+                'stock' => $p['stock'],
+                'iva' => $p['iva'],
+                'id_categoria' => $p['tipoCategoria'],
+                'old_codigo' => $oldCodigo
         ]);
         return $resultado;
     }

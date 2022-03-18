@@ -118,10 +118,12 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
 
     public function edit() {
         if (isset($_POST['gardar'])) {
+            
             if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')) {
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
                 $model = new \Com\Daw2\Models\ProductoModel();
+                var_dump($model);
                 if (count($_errors) > 0) {
 
                     $producto = $model->cargarProducto($_POST['old_codigo']);
@@ -132,19 +134,19 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                             'Edición' => array('url' => '#', 'active' => true)),
                         'Título' => 'Editar producto',
                         'errors' => $_errors,
-                        'edited' => (object) $sanitizado,
+                        'data' => $sanitizado,
                         'productoOriginal' => $producto
                     );
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
                 else {
-                    $producto = new \Com\Daw2\Helpers\Producto($_POST['codigo'], $sanitizado['nombre'], $sanitizado['descripcion'], $sanitizado['coste'], $_POST['margen'], $_POST['stock'], $_POST['iva']);
+                    $producto = array('codigo' =>$_POST['codigo'],'nombre'=> $sanitizado['nombre'],'descripcion'=> $sanitizado['descripcion'],'coste'=> $sanitizado['coste'],'margen'=> $_POST['margen'], 'stock'=>$_POST['stock'], 'iva'=> $_POST['iva'],'tipoProveedor'=> $sanitizado['tipoProveedor'][0],'tipoCategoria'=> $sanitizado['tipoCategoria'][0]);
                    
-                    if ($model->editProveedor($producto, $_POST['old_cif'])) {
-                        $msj = new Mensaje('success', 'Éxito', 'El proveedor ha sido guardado con éxito');
+                    if ($model->editProducto($producto, $_POST['old_codigo'])) {
+                        $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
                         $this->index($msj);
                     } else {
-                        $producto = $model->loadProveedor($_POST['old_cif']);
+                        $producto = $model->cargarProducto($_POST['old_codigo']);
                         $_vars = array('titulo' => 'Edición de producto',
                             'breadcumb' => array(
                                 'Inicio' => array('url' => '#', 'active' => false),
@@ -152,7 +154,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                                 'Edición' => array('url' => '#', 'active' => true)),
                             'Título' => 'Editar producto',
                             'errors' => $_errors,
-                            'edited' => (object) $sanitizado,
+                            'data' => $sanitizado,
                             'productoOriginal' => $producto
                         );
                         $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
@@ -178,7 +180,8 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                     $_vars["proveedores"] = $model->getProveedor();
                     
                     $_vars["categorias"] = $model->getCategorias();
-                    $_vars["data"] = $model->getAllFilter($_GET);
+                    $_vars["data"] = $model->cargarProducto($_GET['codigo']);
+                    var_dump($_vars["data"]);
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
             } else {
@@ -255,11 +258,12 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             }
         }
         
+        $model = new \Com\Daw2\Models\ProductoModel();
         
         $proveedor = $model->getProveedor();
         $existe = false;
         foreach($proveedor as $row){
-            if($_data['proveedor'] == $row['cif']){
+            if($_data['tipoProveedor'][0] == $row['cif']){
                 $existe = true;
             }
         }
@@ -269,7 +273,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
         $categorias = $model->getCategorias();
         $existe = false;
         foreach($categorias as $row){
-            if($_data['categorias'] == $row['nombre_categoria']){
+            if($_data['tipoCategoria'][0] == $row['nombre_categoria']){
                 $existe = true;
             }
         }
