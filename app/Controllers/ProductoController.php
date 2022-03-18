@@ -31,7 +31,6 @@ use \Com\Daw2\Helpers\Utils;
  */
 class ProductoController extends \Com\Daw2\Core\BaseController {
 
-    private static $_PAISES_VALIDOS = array('España', 'Portugal', 'Francia');
 
     /**
      * Sin emulado obtenemos que los números se reciben como float
@@ -125,22 +124,22 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 $model = new \Com\Daw2\Models\ProductoModel();
                 if (count($_errors) > 0) {
 
-                    $producto = $model->loadProveedor($_POST['old_cif']);
+                    $producto = $model->cargarProducto($_POST['old_codigo']);
                     $_vars = array('titulo' => 'Edición de producto',
                         'breadcumb' => array(
                             'Inicio' => array('url' => '#', 'active' => false),
                             'Producto' => array('url' => './?controller=producto', 'active' => false),
                             'Edición' => array('url' => '#', 'active' => true)),
                         'Título' => 'Editar producto',
-                        'paises' => self::$_PAISES_VALIDOS,
                         'errors' => $_errors,
                         'edited' => (object) $sanitizado,
                         'productoOriginal' => $producto
                     );
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
-                } else {
-                    $producto = new \Com\Daw2\Helpers\Proveedor($_POST['cif'], $sanitizado['codigo'], $sanitizado['nombre'], $sanitizado['direccion'], $_POST['website'], $_POST['pais'], $_POST['email']);
-                    $producto->telefono = $_POST['telefono'];
+                }
+                else {
+                    $producto = new \Com\Daw2\Helpers\Producto($_POST['codigo'], $sanitizado['nombre'], $sanitizado['descripcion'], $sanitizado['coste'], $_POST['margen'], $_POST['stock'], $_POST['iva']);
+                   
                     if ($model->editProveedor($producto, $_POST['old_cif'])) {
                         $msj = new Mensaje('success', 'Éxito', 'El proveedor ha sido guardado con éxito');
                         $this->index($msj);
@@ -152,7 +151,6 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                                 'Producto' => array('url' => './?controller=producto', 'active' => false),
                                 'Edición' => array('url' => '#', 'active' => true)),
                             'Título' => 'Editar producto',
-                            'paises' => self::$_PAISES_VALIDOS,
                             'errors' => $_errors,
                             'edited' => (object) $sanitizado,
                             'productoOriginal' => $producto
@@ -167,14 +165,13 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'r')) {
                 $model = new \Com\Daw2\Models\ProductoModel();
                 $producto = $model->cargarProducto($_GET['codigo']);
-                if (!is_null($producto)) {
+                if (!empty($producto)) {
                     $_vars = array('titulo' => 'Edición de producto',
                         'breadcumb' => array(
                             'Inicio' => array('url' => '#', 'active' => false),
                             'Productos' => array('url' => './?controller=producto', 'active' => false),
                             'Edición' => array('url' => '#', 'active' => true)),
                         'Título' => 'Editar producto',
-                        'paises' => self::$_PAISES_VALIDOS,
                         'edited' => $producto,
                         'productoOriginal' => $producto
                     );
@@ -219,22 +216,22 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
     private function checkForm(array $_data): array {
         $_errors = array();
 
-        $checkCif = self::checkCif($_data['cif']);
-        if (!is_null($checkCif)) {
-            $_errors['cif'] = $checkCif;
+        $checkCodigo = self::checkCodigo($_data['codigo']);
+        if (!is_null($checkCodigo)) {
+            $_errors['codigo'] = $checkCodigo;
         } else {
-            if (empty($_data['old_cif'])) {
-                $model = new \Com\Daw2\Models\ProveedorModel();
-                $proveedorAux = $model->loadProveedor($_data['cif']);
-                if (!is_null($proveedorAux)) {
-                    $_errors['cif'] = "Ya existe un proveedor con ese cif";
+            if (empty($_data['old_codigo'])) {
+                $model = new \Com\Daw2\Models\ProductoModel();
+                $ProductoAux = $model->cargarProducto($_data['codigo']);
+                if (empty($ProductoAux['codigo'])) {
+                    $_errors['codigo'] = "Ya existe un producto con ese codigo";
                 }
             } else {
-                if ($_data['old_cif'] !== $_data['cif']) {
-                    $model = new \Com\Daw2\Models\ProveedorModel();
-                    $proveedorAux = $model->loadProveedor($_data['cif']);
-                    if (!is_null($proveedorAux)) {
-                        $_errors['cif'] = "Ya existe un proveedor con ese cif";
+                if ($_data['old_codigo'] !== $_data['codigo']) {
+                    $model = new \Com\Daw2\Models\ProductoModel();
+                    $ProductoAux = $model->cargarProducto($_data['codigo']);
+                    if (empty($ProductoAux['codigo'])) {
+                        $_errors['codigo'] = "Ya existe un producto con ese codigo";
                     }
                 }
             }
@@ -244,10 +241,10 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
         $_campos = array(
             'codigo' => 10,
             'nombre' => 255,
-            'direccion' => 255,
-            'website' => 255,
-            'email' => 255,
-            'telefono' => 255
+            'descripcion' => 255,
+            'coste' => 255,
+            'margen' => 255,
+            'stock' => 1000
         );
 
         foreach ($_campos as $key => $value) {
@@ -257,60 +254,46 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 $_errors[$key] = "Inserte un texto";
             }
         }
-
-        /* if(strlen($_data['codigo']) > 10){
-          $_errors['codigo'] = "El tamaño máximo del código es 10.";
-          }
-          elseif(empty($_data['codigo'])){
-          $_errors['codigo'] = "Inserte un código";
-          }
-
-          if(strlen($_data['nombre']) > 255){
-          $_errors['nombre'] = "El tamaño máximo del nombre es 10.";
-          }
-          elseif(empty($_data['nombre'])){
-          $_errors['nombre'] = "Inserte un nombre";
-          }
-
-          if(strlen($_data['direccion']) > 255){
-          $_errors['direccion'] = "El tamaño máximo de la dirección es 255.";
-          }
-          elseif(empty($_data['direccion'])){
-          $_errors['direccion'] = "Inserte un nombre";
-          } */
-
-        if (!filter_var($_data['website'], FILTER_VALIDATE_URL)) {
-            $_errors['website'] = 'Debe insertar una URL válida';
+        
+        
+        $proveedor = $model->getProveedor();
+        $existe = false;
+        foreach($proveedor as $row){
+            if($_data['proveedor'] == $row['cif']){
+                $existe = true;
+            }
         }
-        if (!filter_var($_data['email'], FILTER_VALIDATE_EMAIL)) {
-            $_errors['email'] = 'Debe insertar un email válido';
+        if(!$existe){
+            $_errors['proveedor'] = 'Debe insertar un proveedor existente';
         }
-        if (!preg_match("/^[0-9]{9,12}$/", $_data['telefono'])) {
-            $_errors['telefono'] = 'Inserte un teléfono de tamaño entre 9 y 12 dígitos';
+        $categorias = $model->getCategorias();
+        $existe = false;
+        foreach($categorias as $row){
+            if($_data['categorias'] == $row['nombre_categoria']){
+                $existe = true;
+            }
         }
-        if (!in_array($_data['pais'], self::$_PAISES_VALIDOS)) {
-            $_errors['pais'] = 'País no válido';
+        if(!$existe){
+            $_errors['categorias'] = 'Debe insertar una categoria existente';
         }
+        if (!filter_var($_data['coste'], FILTER_VALIDATE_FLOAT)) {
+            $_errors['coste'] = 'Debe insertar una URL válida';
+        }
+        if (!filter_var($_data['margen'], FILTER_VALIDATE_FLOAT)) {
+            $_errors['margen'] = 'Debe insertar un email válido';
+        }
+        if (!filter_var($_data['stock'], FILTER_VALIDATE_INT)) {
+            $_errors['stock'] = 'Debe insertar un email válido';
+        }
+        
         return $_errors;
     }
 
-    private static function checkCif(string $cif): ?string {
-        if (strlen($cif) != 9) {
-            return "La longitud del CIF debe ser de 9 caracteres";
-        } elseif (!preg_match("/[A-S][0-9]{7}[A-Z0-9]/", $cif)) {
-            return "Formato del CIF: 'OPPNNNNNC'. O: Tipo de Organización  ; P: Código provincia  ; N: Número correlativo por provincia ; C: Dígito o letra de control. Recibido: " . $cif;
-        } elseif ($cif[1] == "0" && $cif[2] == 0) {
-            return "El código de provincia 00 no es válido.";
-        } else {
-            if ($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S") {
-                if (!preg_match("/[A-Z]/", $cif[8])) {
-                    return "Código de control no válido. Se esperaba una letra.";
-                } elseif ($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S") {
-                    if (!is_numeric($cif[8])) {
-                        return "Código de control no válido. Se esperaba un número.";
-                    }
-                }
-            }
+    private static function checkCodigo(string $codigo): ?string {
+        if (strlen($codigo) != 10) {
+            return "La longitud del codigo debe ser de 10 caracteres";
+        } elseif (!preg_match("/[A-S]{3}[0-9]{7}/", $codigo)) {
+            return "Formato del codigo: 'OPP1234567'. Recibido: " . $codigo;
         }
         return NULL;
     }

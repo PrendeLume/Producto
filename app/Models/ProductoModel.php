@@ -99,8 +99,8 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         return $resultado;
     }
     
-    public function editProveedor(Proveedor $p, string $oldCif) : bool{
-        $stmt = $this->db->prepare("UPDATE proveedor SET cif=:cif, codigo=:codigo, nombre=:nombre, direccion=:direccion, website=:website, pais=:pais, email=:email, telefono=:telefono WHERE cif=:old_cif");
+    public function editProveedor(Producto $p, string $oldCif) : bool{
+        $stmt = $this->db->prepare("UPDATE producto SET cif=:cif, codigo=:codigo, nombre=:nombre, direccion=:direccion, website=:website, pais=:pais, email=:email, telefono=:telefono WHERE cif=:old_cif");
         $resultado = $stmt->execute([
                 'cif' => $p->cif,
                 'codigo'=> $p->codigo,

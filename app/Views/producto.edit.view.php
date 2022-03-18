@@ -72,7 +72,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Proveedor</label>
-                                    <select class="form-control select2bs4" name="tipoProveedor[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
+                                    <select class="form-control select2bs4" name="tipoProveedor[]" data-placeholder="Seleccione un tipo">                                    
                                         <option value="<?php echo $data[0]['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($data[0]['proveedor'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data[0]['proveedor']); ?></option>
                                             
                                         <?php
@@ -93,7 +93,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Categorias</label>
-                                    <select class="form-control select2bs4" name="tipoCategoria[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
+                                    <select class="form-control select2bs4" name="tipoCategoria[]" data-placeholder="Seleccione un tipo">                                    
 
                                         <option value="<?php echo $data[0]['nombre_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($data[0]['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($data[0]['nombre_categoria']); ?></option>
                                         <?php
