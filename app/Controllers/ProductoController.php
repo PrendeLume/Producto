@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -23,239 +23,223 @@ namespace Com\Daw2\Controllers;
 
 use \Com\Daw2\Helpers\Mensaje;
 use \Com\Daw2\Helpers\Utils;
+
 /**
  * Description of TestController
  *
  * @author rafa
  */
-class ProductoController extends \Com\Daw2\Core\BaseController{
-   
+class ProductoController extends \Com\Daw2\Core\BaseController {
+
     private static $_PAISES_VALIDOS = array('España', 'Portugal', 'Francia');
+
     /**
      * Sin emulado obtenemos que los números se reciben como float
      */
-    public function index(?Mensaje $msg = NULL)
-    {   
-        if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'r')){
+    public function index(?Mensaje $msg = NULL) {
+        if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'r')) {
             $_vars = array('titulo' => 'Productos',
-                          'breadcumb' => array(
-                            'Inicio' => array('url' => '#', 'active' => false),
-                            'Producto' => array('url' => '#','active' => true)),
-                           'msg' => $msg,
-                          'Título' => 'Productos',
-                          'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/categoria.index.js')
-                );
-            $model =  new \Com\Daw2\Models\ProductoModel();
+                'breadcumb' => array(
+                    'Inicio' => array('url' => '#', 'active' => false),
+                    'Producto' => array('url' => '#', 'active' => true)),
+                'msg' => $msg,
+                'Título' => 'Productos',
+                'js' => array('plugins/datatables/jquery.dataTables.min.js', 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js', 'assets/js/pages/categoria.index.js')
+            );
+            $model = new \Com\Daw2\Models\ProductoModel();
             $_vars["categorias"] = $model->getCategorias();
-            
+
             $_vars["proveedores"] = $model->getProveedor();
             $_vars["data"] = $model->getAllFilter($_GET);
-            
-            $this->view->showViews(array('templates/header.view.php', 'producto.view.php', 'templates/footer.view.php'), $_vars);   
-            
-            
-        }
-        else{
-            header("location: ./");
-        }
-    }   
-    
-    public function new(){
-        if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
-            
-            $model =  new \Com\Daw2\Models\ProductoModel();
-            if(isset($_POST['gardar'])){
-                $_errors = $this->checkForm($_POST);
-                $saneado = $this->sanitizeForm($_POST);
-                if(count($_errors) > 0){
-                    $_vars = array(
-                              'breadcumb' => array(
-                                'Inicio' => array('url' => '#', 'active' => false),
-                                'Producto' => array('url' => './?controller=producto','active' => false),
-                                'Insertar' => array('url' => '#','active' => true)),
-                              'titulo' => 'Alta producto',
-                              'errors' => $_errors,
-                              'edited' => (object) $saneado
-                    );
-                    
-            $_vars["data"] = $model->getAll();
-                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);      
-                }
-                else{
-                    $model = new \Com\Daw2\Models\ProductoModel();
-                    $producto = new \Com\Daw2\Helpers\Producto($_POST['codigo'], $saneado['nombre'], $saneado['descripcion'], $saneado['proveedor'], $_POST['coste'], $_POST['margen'], $_POST['stock'], $_POST['iva'], $_POST['id_categoria']);
-                    
-                    if($model->insertProveedor($producto)){
-                        $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
-                        $this->index();
-                    }
-                    else{
-                        $_vars = array('titulo' => 'Insertar producto',
-                              'breadcumb' => array(
-                                'Inicio' => array('url' => '#', 'active' => false),
-                                'Producto' => array('url' => './?controller=producto','active' => false),
-                                'Insertar' => array('url' => '#','active' => true)),
-                              'Título' => 'Alta producto',
-                              'edited' => (object) $saneado,
-                            'errors' => array('cif' => 'Hubo un error indeterminado al guardar')
-                        );
-                        
-            $_vars["data"] = $model->getAll();
-                        $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars); 
-                    }
-                }
-            }
-            else{
-                $_vars = array('titulo' => 'Insertar producto',
-                              'breadcumb' => array(
-                                'Inicio' => array('url' => '#', 'active' => false),
-                                'Producto' => array('url' => './?controller=producto','active' => false),
-                                'Insertar' => array('url' => '#','active' => true)),
-                              'Título' => 'Alta producto',
-                    );
-                    
-            $_vars["data"] = $model->getAll();
-                $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);      
-            }
-            
-        }
-        else{
+
+            $this->view->showViews(array('templates/header.view.php', 'producto.view.php', 'templates/footer.view.php'), $_vars);
+        } else {
             header("location: ./");
         }
     }
-    
-    public function edit(){
-        if(isset($_POST['action'])){
-            if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')){
+
+    public function new() {
+        if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')) {
+
+            $model = new \Com\Daw2\Models\ProductoModel();
+            if (isset($_POST['gardar'])) {
+                $_errors = $this->checkForm($_POST);
+                $saneado = $this->sanitizeForm($_POST);
+                if (count($_errors) > 0) {
+                    $_vars = array(
+                        'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Producto' => array('url' => './?controller=producto', 'active' => false),
+                            'Insertar' => array('url' => '#', 'active' => true)),
+                        'titulo' => 'Alta producto',
+                        'errors' => $_errors,
+                        'edited' => (object) $saneado
+                    );
+
+                    $_vars["data"] = $model->getAll();
+                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
+                } else {
+                    $model = new \Com\Daw2\Models\ProductoModel();
+                    $producto = new \Com\Daw2\Helpers\Producto($_POST['codigo'], $saneado['nombre'], $saneado['descripcion'], $saneado['proveedor'], $_POST['coste'], $_POST['margen'], $_POST['stock'], $_POST['iva'], $_POST['id_categoria']);
+
+                    if ($model->insertProveedor($producto)) {
+                        $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
+                        $this->index();
+                    } else {
+                        $_vars = array('titulo' => 'Insertar producto',
+                            'breadcumb' => array(
+                                'Inicio' => array('url' => '#', 'active' => false),
+                                'Producto' => array('url' => './?controller=producto', 'active' => false),
+                                'Insertar' => array('url' => '#', 'active' => true)),
+                            'Título' => 'Alta producto',
+                            'edited' => (object) $saneado,
+                            'errors' => array('cif' => 'Hubo un error indeterminado al guardar')
+                        );
+
+                        $_vars["data"] = $model->getAll();
+                        $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
+                    }
+                }
+            } else {
+                $_vars = array('titulo' => 'Insertar producto',
+                    'breadcumb' => array(
+                        'Inicio' => array('url' => '#', 'active' => false),
+                        'Producto' => array('url' => './?controller=producto', 'active' => false),
+                        'Insertar' => array('url' => '#', 'active' => true)),
+                    'Título' => 'Alta producto',
+                );
+
+                $_vars["data"] = $model->getAll();
+                $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
+            }
+        } else {
+            header("location: ./");
+        }
+    }
+
+    public function edit() {
+        if (isset($_POST['action'])) {
+            if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'w')) {
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
                 $model = new \Com\Daw2\Models\ProductoModel();
-                if(count($_errors) > 0){
-                    
+                if (count($_errors) > 0) {
+
                     $producto = $model->loadProveedor($_POST['old_cif']);
                     $_vars = array('titulo' => 'Edición de producto',
-                              'breadcumb' => array(
-                                'Inicio' => array('url' => '#', 'active' => false),
-                                'Producto' => array('url' => './?controller=producto','active' => false),
-                                'Edición' => array('url' => '#','active' => true)),
-                              'Título' => 'Editar producto',
-                                'paises' => self::$_PAISES_VALIDOS,
-                              'errors' => $_errors,
-                              'edited' => (object) $sanitizado,
-                              'productoOriginal' => $producto
+                        'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Producto' => array('url' => './?controller=producto', 'active' => false),
+                            'Edición' => array('url' => '#', 'active' => true)),
+                        'Título' => 'Editar producto',
+                        'paises' => self::$_PAISES_VALIDOS,
+                        'errors' => $_errors,
+                        'edited' => (object) $sanitizado,
+                        'productoOriginal' => $producto
                     );
-                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);      
-                }
-                else{
-                    $proveedor = new \Com\Daw2\Helpers\Proveedor($_POST['cif'], $sanitizado['codigo'], $sanitizado['nombre'], $sanitizado['direccion'], $_POST['website'], $_POST['pais'], $_POST['email']);
-                    $proveedor->telefono = $_POST['telefono'];
-                    if($model->editProveedor($proveedor, $_POST['old_cif'])){
+                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
+                } else {
+                    $producto = new \Com\Daw2\Helpers\Proveedor($_POST['cif'], $sanitizado['codigo'], $sanitizado['nombre'], $sanitizado['direccion'], $_POST['website'], $_POST['pais'], $_POST['email']);
+                    $producto->telefono = $_POST['telefono'];
+                    if ($model->editProveedor($producto, $_POST['old_cif'])) {
                         $msj = new Mensaje('success', 'Éxito', 'El proveedor ha sido guardado con éxito');
                         $this->index($msj);
-                    }
-                    else{
+                    } else {
                         $producto = $model->loadProveedor($_POST['old_cif']);
                         $_vars = array('titulo' => 'Edición de producto',
-                              'breadcumb' => array(
+                            'breadcumb' => array(
                                 'Inicio' => array('url' => '#', 'active' => false),
-                                'Producto' => array('url' => './?controller=producto','active' => false),
-                                'Edición' => array('url' => '#','active' => true)),
-                              'Título' => 'Editar producto',
-                                'paises' => self::$_PAISES_VALIDOS,
-                              'errors' => $_errors,
-                              'edited' => (object) $sanitizado,
-                              'productoOriginal' => $proveedor
-                                );
-                        $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars); 
+                                'Producto' => array('url' => './?controller=producto', 'active' => false),
+                                'Edición' => array('url' => '#', 'active' => true)),
+                            'Título' => 'Editar producto',
+                            'paises' => self::$_PAISES_VALIDOS,
+                            'errors' => $_errors,
+                            'edited' => (object) $sanitizado,
+                            'productoOriginal' => $producto
+                        );
+                        $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                     }
                 }
-            }
-            else{
+            } else {
                 header("location: ./");
             }
-        }
-        elseif(isset($_GET['cif'])){
-            if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'r')){
-                $model = new \Com\Daw2\Models\ProveedorModel();
-                $proveedor = $model->loadProveedor($_GET['cif']);
-                if(!is_null($proveedor)){                
-                    $_vars = array('titulo' => 'Edición de proveedor',
-                                      'breadcumb' => array(
-                                        'Inicio' => array('url' => '#', 'active' => false),
-                                        'Proveedores' => array('url' => './?controller=proveedor','active' => false),
-                                        'Edición' => array('url' => '#','active' => true)),
-                                      'Título' => 'Editar proveedor',
-                                      'paises' => self::$_PAISES_VALIDOS,
-                                      'edited' => $proveedor,
-                                      'productoOriginal' => $proveedor
-                            );
-                    $this->view->showViews(array('templates/header.view.php', 'proveedor.edit.view.php', 'templates/footer.view.php'), $_vars);    
+        } elseif (isset($_GET['codigo'])) {
+            if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'r')) {
+                $model = new \Com\Daw2\Models\ProductoModel();
+                $producto = $model->cargarProducto($_GET['codigo']);
+                if (!is_null($producto)) {
+                    $_vars = array('titulo' => 'Edición de producto',
+                        'breadcumb' => array(
+                            'Inicio' => array('url' => '#', 'active' => false),
+                            'Productos' => array('url' => './?controller=producto', 'active' => false),
+                            'Edición' => array('url' => '#', 'active' => true)),
+                        'Título' => 'Editar producto',
+                        'paises' => self::$_PAISES_VALIDOS,
+                        'edited' => $producto,
+                        'productoOriginal' => $producto
+                    );
+                    
+                    $_vars["categorias"] = $model->getCategorias();
+                    $_vars["data"] = $model->getAllFilter($_GET);
+                    $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
-            }
-            else{
+            } else {
                 header("location: ./");
             }
         }
     }
-    
-    public function delete(){
-        if(Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')){
+
+    public function delete() {
+        if (Utils::contains($_SESSION['usuario']['permisos']['Proveedor'], 'd')) {
             $model = new \Com\Daw2\Models\ProductoModel();
             $codigo = filter_var($_GET['codigo'], FILTER_SANITIZE_STRING);
-            if(!empty($codigo)){
-                try{
-                    if($model->delete($codigo)){
+            if (!empty($codigo)) {
+                try {
+                    if ($model->delete($codigo)) {
                         $this->index(new Mensaje("success", "¡Eliminada!", "Producto borrada con éxito"));
-                    }
-                    else{
+                    } else {
                         $this->index(new Mensaje("warning", "Sin cambios", "No se ha borrado el proveedor: $codigo"));
-                    }            
-                }
-                catch(\PDOException $ex){
-                    if(strpos($ex->getMessage(), '1451') !== false){
+                    }
+                } catch (\PDOException $ex) {
+                    if (strpos($ex->getMessage(), '1451') !== false) {
                         $this->index(new Mensaje("danger", "No permitido", "Antes de borrar un proveedor debe editar o borrar todos sus productos."));
-                    }
-                    else{
-                        $this->index(new Mensaje("danger", "No permitido", "PDOException: ".$ex->getMessage()));
+                    } else {
+                        $this->index(new Mensaje("danger", "No permitido", "PDOException: " . $ex->getMessage()));
                     }
                 }
-            }
-            else{
+            } else {
                 $this->index(new Mensaje("warning", "Petición incorrecta", "No se ha facilitado la codigo a borrar"));
             }
-        }
-        else{
+        } else {
             header("location: ./");
         }
     }
-    
-    private function checkForm(array $_data) : array{
+
+    private function checkForm(array $_data): array {
         $_errors = array();
-        
+
         $checkCif = self::checkCif($_data['cif']);
-        if(!is_null($checkCif)){
+        if (!is_null($checkCif)) {
             $_errors['cif'] = $checkCif;
-        }
-        else{
-            if(empty($_data['old_cif'])){
+        } else {
+            if (empty($_data['old_cif'])) {
                 $model = new \Com\Daw2\Models\ProveedorModel();
                 $proveedorAux = $model->loadProveedor($_data['cif']);
-                if(!is_null($proveedorAux)){
+                if (!is_null($proveedorAux)) {
                     $_errors['cif'] = "Ya existe un proveedor con ese cif";
                 }
-            }
-            else{
-                if($_data['old_cif'] !== $_data['cif']){
+            } else {
+                if ($_data['old_cif'] !== $_data['cif']) {
                     $model = new \Com\Daw2\Models\ProveedorModel();
                     $proveedorAux = $model->loadProveedor($_data['cif']);
-                    if(!is_null($proveedorAux)){
+                    if (!is_null($proveedorAux)) {
                         $_errors['cif'] = "Ya existe un proveedor con ese cif";
                     }
                 }
             }
         }
-        
-        
+
+
         $_campos = array(
             'codigo' => 10,
             'nombre' => 255,
@@ -264,69 +248,64 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
             'email' => 255,
             'telefono' => 255
         );
-        
-        foreach($_campos as $key => $value){
-            if(strlen($_data[$key]) > $value){
+
+        foreach ($_campos as $key => $value) {
+            if (strlen($_data[$key]) > $value) {
                 $_errors[$key] = "El tamaño máximo permito es $value";
-            }
-            elseif(empty($_data[$key])){
+            } elseif (empty($_data[$key])) {
                 $_errors[$key] = "Inserte un texto";
             }
         }
-        
-        /*if(strlen($_data['codigo']) > 10){
-            $_errors['codigo'] = "El tamaño máximo del código es 10.";
-        }
-        elseif(empty($_data['codigo'])){
-            $_errors['codigo'] = "Inserte un código";
-        }
-        
-        if(strlen($_data['nombre']) > 255){
-            $_errors['nombre'] = "El tamaño máximo del nombre es 10.";
-        }
-        elseif(empty($_data['nombre'])){
-            $_errors['nombre'] = "Inserte un nombre";
-        }
-        
-        if(strlen($_data['direccion']) > 255){
-            $_errors['direccion'] = "El tamaño máximo de la dirección es 255.";
-        }
-        elseif(empty($_data['direccion'])){
-            $_errors['direccion'] = "Inserte un nombre";
-        }*/
-        
-        if(!filter_var($_data['website'], FILTER_VALIDATE_URL)){
+
+        /* if(strlen($_data['codigo']) > 10){
+          $_errors['codigo'] = "El tamaño máximo del código es 10.";
+          }
+          elseif(empty($_data['codigo'])){
+          $_errors['codigo'] = "Inserte un código";
+          }
+
+          if(strlen($_data['nombre']) > 255){
+          $_errors['nombre'] = "El tamaño máximo del nombre es 10.";
+          }
+          elseif(empty($_data['nombre'])){
+          $_errors['nombre'] = "Inserte un nombre";
+          }
+
+          if(strlen($_data['direccion']) > 255){
+          $_errors['direccion'] = "El tamaño máximo de la dirección es 255.";
+          }
+          elseif(empty($_data['direccion'])){
+          $_errors['direccion'] = "Inserte un nombre";
+          } */
+
+        if (!filter_var($_data['website'], FILTER_VALIDATE_URL)) {
             $_errors['website'] = 'Debe insertar una URL válida';
         }
-        if(!filter_var($_data['email'], FILTER_VALIDATE_EMAIL)){
+        if (!filter_var($_data['email'], FILTER_VALIDATE_EMAIL)) {
             $_errors['email'] = 'Debe insertar un email válido';
         }
-        if(!preg_match("/^[0-9]{9,12}$/", $_data['telefono'])){
+        if (!preg_match("/^[0-9]{9,12}$/", $_data['telefono'])) {
             $_errors['telefono'] = 'Inserte un teléfono de tamaño entre 9 y 12 dígitos';
         }
-        if(!in_array($_data['pais'], self::$_PAISES_VALIDOS)){
+        if (!in_array($_data['pais'], self::$_PAISES_VALIDOS)) {
             $_errors['pais'] = 'País no válido';
         }
         return $_errors;
     }
-    
-    private static function checkCif(string $cif) : ?string{
-        if(strlen($cif) != 9){
+
+    private static function checkCif(string $cif): ?string {
+        if (strlen($cif) != 9) {
             return "La longitud del CIF debe ser de 9 caracteres";
-        }
-        elseif(!preg_match("/[A-S][0-9]{7}[A-Z0-9]/", $cif)){
-            return "Formato del CIF: 'OPPNNNNNC'. O: Tipo de Organización  ; P: Código provincia  ; N: Número correlativo por provincia ; C: Dígito o letra de control. Recibido: ". $cif;
-        }
-        elseif($cif[1] == "0" && $cif[2] == 0){
+        } elseif (!preg_match("/[A-S][0-9]{7}[A-Z0-9]/", $cif)) {
+            return "Formato del CIF: 'OPPNNNNNC'. O: Tipo de Organización  ; P: Código provincia  ; N: Número correlativo por provincia ; C: Dígito o letra de control. Recibido: " . $cif;
+        } elseif ($cif[1] == "0" && $cif[2] == 0) {
             return "El código de provincia 00 no es válido.";
-        }
-        else{
-            if($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S"){
-                if(!preg_match("/[A-Z]/", $cif[8])){
+        } else {
+            if ($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S") {
+                if (!preg_match("/[A-Z]/", $cif[8])) {
                     return "Código de control no válido. Se esperaba una letra.";
-                }
-                elseif($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S"){
-                    if(!is_numeric($cif[8])){
+                } elseif ($cif[0] == "K" || $cif[0] == "P" || $cif[0] == "Q" || $cif[0] == "S") {
+                    if (!is_numeric($cif[8])) {
                         return "Código de control no válido. Se esperaba un número.";
                     }
                 }
@@ -334,8 +313,9 @@ class ProductoController extends \Com\Daw2\Core\BaseController{
         }
         return NULL;
     }
-    
-    private static function sanitizeForm(array $_data) : array{
+
+    private static function sanitizeForm(array $_data): array {
         return filter_var_array($_data, FILTER_SANITIZE_SPECIAL_CHARS);
     }
+
 }

@@ -60,7 +60,7 @@ producto.edit.view.php
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-cubes mr-1"></i>
-                        Datos proveedor <?php if(isset($proveedorOriginal)) { echo $proveedorOriginal->cif . ' - '. $proveedorOriginal->nombre;  } ?>
+                        Datos proveedor <?php if(isset($productoOriginal)) { echo $productoOriginal['codigo'] . ' - '. $productoOriginal['nombre'];  } ?>
                     </h3>                
                 </div>
                 <form action="./?controller=Producto" method="get">
@@ -70,7 +70,7 @@ producto.edit.view.php
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Proveedores</label>
+                                <label>Proveedor</label>
                                 <select class="form-control select2bs4" name="tipoProveedor[]" multiple="multiple" data-placeholder="Seleccione un tipo">                                    
                                     <?php
                                     foreach ($data as $row) {
@@ -98,26 +98,26 @@ producto.edit.view.php
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="codigo">codigo</label>
+                                <label for="codigo">Codigo</label>
                                 <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Codigo" value="<?php echo isset($_GET['codigo']) ? filter_var($_GET['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="nombre">nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de usuario" value="<?php echo isset($_GET['nombre']) ? filter_var($_GET['nombre'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                <label for="nombre">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo filter_var($data[0]['nombre'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="descripcion">descirpcion</label>
-                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo isset($_GET['descripcion']) ? filter_var($_GET['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                <label for="descripcion">Descirpcion</label>
+                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo filter_var($data[0]['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="coste">coste</label>
-                                <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo isset($_GET['coste']) ? filter_var($_GET['coste'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                <label for="coste">Coste</label>
+                                <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo filter_var($data[0]['coste'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
                             </div>
                         </div>
                                     
