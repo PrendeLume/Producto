@@ -123,7 +123,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
                 $model = new \Com\Daw2\Models\ProductoModel();
-                var_dump($model);
+                
                 if (count($_errors) > 0) {
 
                     $producto = $model->cargarProducto($_POST['old_codigo']);
@@ -137,10 +137,12 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                         'data' => $sanitizado,
                         'productoOriginal' => $producto
                     );
+                        var_dump($sanitizado);
+                    
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
                 else {
-                    $producto = array('codigo' =>$_POST['codigo'],'nombre'=> $sanitizado['nombre'],'descripcion'=> $sanitizado['descripcion'],'coste'=> $sanitizado['coste'],'margen'=> $_POST['margen'], 'stock'=>$_POST['stock'], 'iva'=> $_POST['iva'],'tipoProveedor'=> $sanitizado['tipoProveedor'][0],'tipoCategoria'=> $sanitizado['tipoCategoria'][0]);
+                    $producto = array('codigo' =>$_POST['codigo'],'nombre'=> $sanitizado['nombre'],'descripcion'=> $sanitizado['descripcion'],'coste'=> $sanitizado['coste'],'margen'=> $_POST['margen'], 'stock'=>$_POST['stock'], 'iva'=> $_POST['iva'],'tipoProveedor'=> $sanitizado['proveedor'],'tipoCategoria'=> $sanitizado['categoria']);
                    
                     if ($model->editProducto($producto, $_POST['old_codigo'])) {
                         $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
@@ -180,8 +182,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                     $_vars["proveedores"] = $model->getProveedor();
                     
                     $_vars["categorias"] = $model->getCategorias();
-                    $_vars["data"] = $model->cargarProducto($_GET['codigo']);
-                    var_dump($_vars["data"]);
+                    var_dump($producto);
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
             } else {
@@ -267,7 +268,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
         $proveedor = $model->getProveedor();
         $existe = false;
         foreach($proveedor as $row){
-            if($_data['tipoProveedor'][0] == $row['cif']){
+            if($_data['proveedor'] == $row['cif']){
                 $existe = true;
             }
         }
@@ -277,7 +278,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
         $categorias = $model->getCategorias();
         $existe = false;
         foreach($categorias as $row){
-            if($_data['tipoCategoria'][0] == $row['nombre_categoria']){
+            if($_data['categoria'] == $row['id_categoria']){
                 $existe = true;
             }
         }

@@ -73,8 +73,8 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Proveedor</label>
-                                    <select class="form-control select2bs4" name="tipoProveedor[]" data-placeholder="Seleccione un tipo">                                    
-                                        <option value="<?php echo $data['proveedor']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($data['proveedor'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data['proveedor']); ?></option>
+                                    <select class="form-control select2bs4" name="proveedor" data-placeholder="Seleccione un tipo">                                    
+                                        <option value="<?php echo $data['proveedor']; ?>" <?php echo isset($_GET['proveedor']) && in_array($data['proveedor'], $_GET['proveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data['proveedor']); ?></option>
                                             
                                         <?php
                                         foreach ($proveedores as $row) {
@@ -83,7 +83,7 @@
                                             }else{
                                             ?>
                                         
-                                        <option value="<?php echo $row['cif']; ?>" <?php echo isset($_GET['tipoProveedor']) && in_array($row['cif'], $_GET['tipoProveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($row['cif']); ?></option>
+                                        <option value="<?php echo $row['cif']; ?>" <?php echo isset($_GET['proveedor']) && in_array($row['cif'], $_GET['proveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($row['cif']); ?></option>
                                         <?php
                                             }
                                         }
@@ -94,17 +94,17 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Categorias</label>
-                                    <select class="form-control select2bs4" name="tipoCategoria[]" data-placeholder="Seleccione un tipo">                                    
+                                    <select class="form-control select2bs4" name="categoria" data-placeholder="Seleccione un tipo">                                    
 
-                                        <option value="<?php echo $data['id_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($data['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($data['nombre_categoria']); ?></option>
                                         <?php
                                         foreach ($categorias as $row) {
-                                            if($row['nombre_categoria'] == $data['nombre_categoria']){
-                                                
+                                            if($row['id_categoria'] == $data['id_categoria']){?>
+                                                <option value="<?php echo $row['id_categoria']; ?>" selected><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                        <?php
                                             }else{
                                             ?>
                                         
-                                        <option value="<?php echo $row['id_categoria']; ?>" <?php echo isset($_GET['tipoCategoria']) && in_array($row['nombre_categoria'], $_GET['tipoCategoria']) ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                        <option value="<?php echo $row['id_categoria']; ?>" <?php echo isset($_GET['categoria']) && in_array($row['id_categoria'], $_GET['categoria']) ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
                                         <?php
                                             }
                                         }

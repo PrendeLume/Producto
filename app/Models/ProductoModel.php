@@ -49,25 +49,25 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         if(!empty($_filtros['codigo'])){
             $query.= " AND codigo LIKE". "'%".$_filtros['codigo']."%'";
         }
-        if(isset($_filtros['tipoProveedor']) && is_array($_filtros['tipoProveedor'])){
+        if(isset($_filtros['proveedor']) && is_array($_filtros['proveedor'])){
             $query.=" AND (";
-            for ($i=0; $i < count($_filtros['tipoProveedor']); $i++) { 
+            for ($i=0; $i < count($_filtros['proveedor']); $i++) { 
                 if($i == 0){
-                    $query.= "proveedor = "."'".$_filtros['tipoProveedor'][$i]."'";
+                    $query.= "proveedor = "."'".$_filtros['proveedor'][$i]."'";
                 }else{
-                    $query.= " OR proveedor = "."'".$_filtros['tipoProveedor'][$i]."'";
+                    $query.= " OR proveedor = "."'".$_filtros['proveedor'][$i]."'";
                 }
                 
             }
             $query.=" )";
         }
-        if(isset($_filtros['tipoCategoria']) && is_array($_filtros['tipoCategoria'])){
+        if(isset($_filtros['categoria']) && is_array($_filtros['categoria'])){
             $query.=" AND (";
-            for ($i=0; $i < count($_filtros['tipoCategoria']); $i++) { 
+            for ($i=0; $i < count($_filtros['categoria']); $i++) { 
                 if($i == 0){
-                    $query.= "nombre_categoria = "."'".$_filtros['tipoCategoria'][$i]."'";
+                    $query.= "nombre_categoria = "."'".$_filtros['categoria'][$i]."'";
                 }else{
-                    $query.= " OR nombre_categoria = "."'".$_filtros['tipoCategoria'][$i]."'";
+                    $query.= " OR nombre_categoria = "."'".$_filtros['categoria'][$i]."'";
                 }
                 
             }
