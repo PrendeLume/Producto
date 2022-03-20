@@ -43,7 +43,14 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
         $_categorias = $stmt->fetchAll();
         return $_categorias;
     }
-    public function getAllFilter(array $_filtros) : array{
+    public function getCountUsuariosByFilter(array $_filtros) : int{
+        $query = "SELECT COUNT(*) AS total FROM producto WHERE (1=1)";
+        $_where = $this->getAllFilter($_filtros);    
+        $statement = $this->db->prepare($query);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
+    public function getAllFilter(array $_filtros ,  string $order = 'codigo', string $sentido = 'DESC', $pag = 1, $tamPag = 100) : array{
         $query = "SELECT * FROM  producto JOIN categoria ON producto.id_categoria = categoria.id_categoria WHERE 1 = 1";
 
         if(!empty($_filtros['codigo'])){
@@ -73,6 +80,13 @@ class ProductoModel extends \Com\Daw2\Core\BaseModel{
             }
             $query.=" )";
         }
+        $ordenacion = " ORDER BY ". $order." ". $sentido;
+        $query.= $ordenacion;
+        
+        $pagina = ($pag - 1) * $tamPag;
+        $paginacion= " LIMIT $pagina, ". $tamPag. " ";
+        $query .= $paginacion;
+        var_dump($query);
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         $_categorias = $stmt->fetchAll();
