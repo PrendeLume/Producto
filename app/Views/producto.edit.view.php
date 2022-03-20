@@ -78,16 +78,11 @@
 
                                         <?php
                                         foreach ($proveedores as $row) {
-                                            if ($row['cif'] == $data['cif']) {
-                                        ?>
-                                                <option value="<?php echo $data['cif']; ?>" selected><?php echo ucfirst($data['cif']); ?></option>
-                                            <?php
-                                            } else {
+                                         
                                             ?>
-
-                                                <option value="<?php echo $row['cif']; ?>"><?php echo ucfirst($row['cif']); ?></option>
+                                                <option value="<?php echo $row['cif']; ?>" <?php echo isset($data)&&($row['cif'] == $data['proveedor'])? 'selected': '';?>><?php echo ucfirst($row['cif']); ?></option>
+                                                
                                         <?php
-                                            }
                                         }
                                         ?>
                                     </select>
@@ -97,20 +92,17 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Categorias</label>
+                                    <?php var_dump($categorias[0]['id_categoria']);?>
                                     <select class="form-control select2bs4" name="categoria" data-placeholder="Seleccione un tipo">
 
                                         <?php
                                         foreach ($categorias as $row) {
-                                            if ($row['id_categoria'] == $data['id_categoria']) {
-                                        ?>
-                                                <option value="<?php echo $row['id_categoria']; ?>" selected><?php echo ucfirst($row['nombre_categoria']); ?></option>
-                                            <?php
-                                            } else {
+                                            
                                             ?>
-
-                                                <option value="<?php echo $row['id_categoria']; ?>"><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                            <option value="<?php echo $row['id_categoria']; ?>"  <?php echo (isset($data['categoria'])&&($row['id_categoria'] == $data['categoria'])) || (isset($data['id_categoria'])&&($row['id_categoria'] == $data['id_categoria']))? 'selected': '';?> ><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                            
                                         <?php
-                                            }
+                                            
                                         }
                                         ?>
                                     </select>

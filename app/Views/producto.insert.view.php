@@ -77,22 +77,18 @@
                                     <label>Proveedor</label>
                                     <select class="form-control select2bs4" name="proveedor" data-placeholder="Seleccione un tipo">                                    
 
-                                        <?php
+                                        <?php 
                                         foreach ($proveedores as $row) {
-                                            if ($row['cif'] == $data['cif']) {
-                                                ?>
-                                                <option value="<?php echo $proveedores['cif']; ?>" selected><?php echo ucfirst($proveedores['cif']); ?></option>
-                                                <?php
-                                            } else {
+                                            
                                                 ?>
 
-                                                <option value="<?php echo $row['cif']; ?>"><?php echo ucfirst($row['cif']); ?></option>
-        <?php
-    }
-}
-?>
+                                                <option value="<?php echo $row['cif']; ?>" <?php echo isset($data)&&($row['cif'] == $data['proveedor'])? 'selected': '';?>><?php echo ucfirst($row['cif']); ?></option>
+                                                <?php
+                                            
+                                        }
+                                        ?>
                                     </select>
-                                    <p class="text-danger"><small><?php echo isset($errors['categoria']) ? $errors['categoria'] : '' ?></small></p>
+                                    <p class="text-danger"><small><?php echo isset($errors['proveedor']) ? $errors['proveedor'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -102,68 +98,64 @@
 
                                         <?php
                                         foreach ($categorias as $row) {
-                                            if ($row['id_categoria'] == $data['id_categoria']) {
-                                                ?>
-                                                <option value="<?php echo $row['id_categoria']; ?>" selected><?php echo ucfirst($row['nombre_categoria']); ?></option>
-                                                <?php
-                                            } else {
+                                            
                                                 ?>
 
-                                                <option value="<?php echo $row['id_categoria']; ?>" ><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                                <option value="<?php echo $row['id_categoria']; ?>"  <?php echo isset($data)&&($row['id_categoria'] == $data['categoria'])? 'selected': '';?> ><?php echo ucfirst($row['nombre_categoria']); ?></option>
                                             <?php
-                                        }
+                                        
                                     }
                                     ?>
                                     </select>
-                                    <p class="text-danger"><small><?php echo isset($errors['proveedor']) ? $errors['proveedor'] : '' ?></small></p>
+                                    <p class="text-danger"><small><?php echo isset($errors['categoria']) ? $errors['caegoria'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="codigo">Codigo</label>
-                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="OPP1234567" value="<?php echo isset($_GET['codigo']) ? filter_var($_GET['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="OPP1234567" value="<?php echo isset($data['codigo']) ? filter_var($data['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
                                     <p class="text-danger"><small><?php echo isset($errors['codigo']) ? $errors['codigo'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="nombre">Nombre</label>
-                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo isset($_GET['nombre']) ? filter_var($data['nombre'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
+                                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo isset($data['nombre']) ? filter_var($data['nombre'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                     <p class="text-danger"><small><?php echo isset($errors['nombre']) ? $errors['nombre'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="descripcion">Descirpcion</label>
-                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo isset($_GET['descripcion']) ? filter_var($data['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS):""; ?>" />
+                                    <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo isset($data['descripcion']) ? filter_var($data['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS):""; ?>" />
                                     <p class="text-danger"><small><?php echo isset($errors['descripcion']) ? $errors['descripcion'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="coste">Coste</label>
-                                    <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo isset($_GET['coste']) ? filter_var($data['coste'], FILTER_SANITIZE_SPECIAL_CHARS):""; ?>" />
+                                    <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo isset($data['coste']) ? filter_var($data['coste'], FILTER_SANITIZE_SPECIAL_CHARS):""; ?>" />
                                     <p class="text-danger"><small><?php echo isset($errors['coste']) ? $errors['coste'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="margen">Margen</label>
-                                    <input type="text" class="form-control" id="margen" name="margen" placeholder="margen" value="<?php echo isset($_GET['margen']) ? filter_var($data['margen'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
+                                    <input type="text" class="form-control" id="margen" name="margen" placeholder="margen" value="<?php echo isset($data['margen']) ? filter_var($data['margen'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                     <p class="text-danger"><small><?php echo isset($errors['margen']) ? $errors['margen'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="stock">Stock</label>
-                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="<?php echo isset($_GET['stock']) ? filter_var($data['stock'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
+                                    <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="<?php echo isset($data['stock']) ? filter_var($data['stock'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                     <p class="text-danger"><small><?php echo isset($errors['stock']) ? $errors['stock'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="iva">IVA</label>
-                                    <input type="text" class="form-control" id="iva" name="iva" placeholder="iva" value="<?php echo isset($_GET['iva']) ? filter_var($data['iva'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
+                                    <input type="text" class="form-control" id="iva" name="iva" placeholder="iva" value="<?php echo isset($data['iva']) ? filter_var($data['iva'], FILTER_SANITIZE_SPECIAL_CHARS): ""; ?>" />
                                     <p class="text-danger"><small><?php echo isset($errors['iva']) ? $errors['iva'] : '' ?></small></p>
                                 </div>
                             </div>
