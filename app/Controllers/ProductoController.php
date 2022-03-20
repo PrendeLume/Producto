@@ -78,7 +78,10 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                         'errors' => $_errors,
                         'data' => $sanitizado
                     );
-
+                    
+                    $_vars["proveedores"] = $model->getProveedor();
+                    
+                    $_vars["categorias"] = $model->getCategorias();
                     $this->view->showViews(array('templates/header.view.php', 'producto.insert.view.php', 'templates/footer.view.php'), $_vars);
                 } else {
                     $model = new \Com\Daw2\Models\ProductoModel();
@@ -97,7 +100,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                             'data' => $sanitizado,
                             'errors' => array('codigo' => 'Hubo un error indeterminado al guardar')
                         );
-
+                        
                         $this->view->showViews(array('templates/header.view.php', 'producto.insert.view.php', 'templates/footer.view.php'), $_vars);
                     }
                 }
@@ -127,7 +130,6 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
                 $model = new \Com\Daw2\Models\ProductoModel();
-                var_dump($_POST);
                 if (count($_errors) > 0) {
 
                     $producto = $model->cargarProducto($_POST['old_codigo']);
@@ -141,7 +143,6 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                         'data' => $sanitizado,
                         'productoOriginal' => $producto
                     );
-                        var_dump($sanitizado);
                         $_vars["proveedores"] = $model->getProveedor();
                     
                         $_vars["categorias"] = $model->getCategorias();
@@ -188,7 +189,6 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                     $_vars["proveedores"] = $model->getProveedor();
                     
                     $_vars["categorias"] = $model->getCategorias();
-                    var_dump($producto);
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
             } else {
