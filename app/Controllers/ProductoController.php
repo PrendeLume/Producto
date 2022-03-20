@@ -47,11 +47,13 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             );
             $model = new \Com\Daw2\Models\ProductoModel();
             $_vars["categorias"] = $model->getCategorias();
-
+            if(isset($_GET['action'])){
+                $_GET['action'] = 'index';
+            }
             $_vars["proveedores"] = $model->getProveedor();
             $_vars["data"] = $model->getAllFilter($_GET);
-
             $this->view->showViews(array('templates/header.view.php', 'producto.view.php', 'templates/footer.view.php'), $_vars);
+            
         } else {
             header("location: ./");
         }
@@ -64,7 +66,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             if (isset($_POST['gardar'])) {
                 $_errors = $this->checkForm($_POST);
                 
-                    var_dump($_errors);
+                var_dump($_errors);
                 $sanitizado = $this->sanitizeForm($_POST);
                 if (count($_errors)> 0) {
                     $_vars = array(
@@ -83,7 +85,6 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                     $producto = array('codigo' =>$_POST['codigo'],'nombre'=> $sanitizado['nombre'],'descripcion'=> $sanitizado['descripcion'],'coste'=> $sanitizado['coste'],'margen'=> $_POST['margen'], 'stock'=>$_POST['stock'], 'iva'=> $_POST['iva'],'tipoProveedor'=> $sanitizado['proveedor'],'tipoCategoria'=> $sanitizado['categoria']);
                    
                     if ($model->insertProducto($producto)) {
-                        
                         $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
                         $this->index($msj);
                     } else {
@@ -126,7 +127,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 $_errors = $this->checkForm($_POST);
                 $sanitizado = $this->sanitizeForm($_POST);
                 $model = new \Com\Daw2\Models\ProductoModel();
-                
+                var_dump($_POST);
                 if (count($_errors) > 0) {
 
                     $producto = $model->cargarProducto($_POST['old_codigo']);
@@ -250,12 +251,11 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
 
 
         $_campos = array(
-            'codigo' => 10,
             'nombre' => 255,
             'descripcion' => 255,
-            'coste' => 255,
+            'coste' => 10000,
             'margen' => 255,
-            'stock' => 1000
+            'stock' => 10000
         );
 
         foreach ($_campos as $key => $value) {
@@ -289,13 +289,16 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             $_errors['categorias'] = 'Debe insertar una categoria existente';
         }
         if (!filter_var($_data['coste'], FILTER_VALIDATE_FLOAT)) {
-            $_errors['coste'] = 'Debe insertar una URL válida';
+            $_errors['coste'] = 'Debe ser un decimal';
         }
         if (!filter_var($_data['margen'], FILTER_VALIDATE_FLOAT)) {
-            $_errors['margen'] = 'Debe insertar un email válido';
+            $_errors['margen'] = 'Debe ser un decimal';
         }
         if (!filter_var($_data['stock'], FILTER_VALIDATE_INT)) {
-            $_errors['stock'] = 'Debe insertar un email válido';
+            $_errors['stock'] = 'Debe ser un entero';
+        }
+        if (!filter_var($_data['iva'], FILTER_VALIDATE_INT)) {
+            $_errors['iva'] = 'Debe ser un entero';
         }
         
         return $_errors;
@@ -304,7 +307,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
     private static function checkCodigo(string $codigo): ?string {
         if (strlen($codigo) != 10) {
             return "La longitud del codigo debe ser de 10 caracteres";
-        } elseif (!preg_match("/[A-S]{3}[0-9]{7}/", $codigo)) {
+        } elseif (!preg_match("/^[A-S]{3}[0-9]{7}$/", $codigo)) {
             return "Formato del codigo: 'OPP1234567'. Recibido: " . $codigo;
         }
         return NULL;

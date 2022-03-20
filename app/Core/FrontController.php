@@ -33,11 +33,11 @@ class FrontController {
         if(!class_exists($controller)){
             throw new \Exception('No existe la clase: ' . $config->get('CONTROLLERS_NAMESPACE').$controller);
         }
-        
+        /* Isto teño que comentalo para que me funcione en xampp
         if (!is_callable(array($controller, $action))) {
             throw new \Exception($controller . '->' . $action . ' no existe');
         }
-
+*/
         //Si todo esta bien, creamos una instancia del controlador
         //  y llamamos a la accion
         $controller = new $controller();

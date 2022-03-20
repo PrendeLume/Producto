@@ -120,6 +120,7 @@
                                 <div class="form-group">
                                     <label for="codigo">Codigo</label>
                                     <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Codigo" value="<?php echo isset($_GET['codigo']) ? filter_var($_GET['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                
                                 </div>
                             </div>
                             <div class="col-6">

@@ -15,10 +15,10 @@ $config->set('LOGIN_CONTROLLER', 'UsuarioSistema');
 $config->set('LOGIN_ACTION', 'login');
 
 $config->set('DEBUG', TRUE);
-
+//Posto para xampp
 $config->set('dbhost', 'localhost');
 $config->set('dbname', 'demoud4');
-$config->set('dbuser', 'admin');
-$config->set('dbpass', 'daw2pass');
+$config->set('dbuser', 'root');
+$config->set('dbpass', '');
 $config->set('dbcharset', 'utf8mb4');
 $config->set('emulado', false);

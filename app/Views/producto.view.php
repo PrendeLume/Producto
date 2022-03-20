@@ -47,7 +47,7 @@
                 }
                 ?>
             </div>
-            <form action="#" method="get">
+            <form action="./?controller=producto&action=" method="get">
                 <input type="hidden" name="controller" value="<?php echo $_GET['controller']; ?>" />
                 <input type="hidden" name="action" value="<?php echo isset($_GET['action']) ? $_GET['action'] : ''; ?>" />
                 <div class="card-body"> 

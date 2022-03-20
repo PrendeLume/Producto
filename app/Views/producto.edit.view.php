@@ -83,7 +83,7 @@
                                         foreach ($proveedores as $row) {
                                             if ($row['cif'] == $data['cif']) {
                                                 ?>
-                                                <option value="<?php echo $data['proveedor']; ?>" <?php echo isset($_GET['proveedor']) && in_array($data['proveedor'], $_GET['proveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data['proveedor']); ?></option>
+                                                <option value="<?php echo $data['cif']; ?>" <?php echo isset($_GET['proveedor']) && in_array($data['cif'], $_GET['proveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data['cif']); ?></option>
                                                 <?php
                                             } else {
                                                 ?>
