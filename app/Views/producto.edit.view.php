@@ -83,12 +83,12 @@
                                         foreach ($proveedores as $row) {
                                             if ($row['cif'] == $data['cif']) {
                                                 ?>
-                                                <option value="<?php echo $data['cif']; ?>" <?php echo isset($_GET['proveedor']) && in_array($data['cif'], $_GET['proveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($data['cif']); ?></option>
+                                                <option value="<?php echo $data['cif']; ?>" selected><?php echo ucfirst($data['cif']); ?></option>
                                                 <?php
                                             } else {
                                                 ?>
 
-                                                <option value="<?php echo $row['cif']; ?>" <?php echo isset($_GET['proveedor']) && in_array($row['cif'], $_GET['proveedor']) ? 'selected' : ''; ?>><?php echo ucfirst($row['cif']); ?></option>
+                                                <option value="<?php echo $row['cif']; ?>"><?php echo ucfirst($row['cif']); ?></option>
         <?php
     }
 }
@@ -110,7 +110,7 @@
                                             } else {
                                                 ?>
 
-                                                <option value="<?php echo $row['id_categoria']; ?>" <?php echo isset($_GET['categoria']) && in_array($row['id_categoria'], $_GET['categoria']) ? 'selected' : ''; ?>><?php echo ucfirst($row['nombre_categoria']); ?></option>
+                                                <option value="<?php echo $row['id_categoria']; ?>"><?php echo ucfirst($row['nombre_categoria']); ?></option>
                                             <?php
                                         }
                                     }
@@ -121,43 +121,50 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="codigo">Codigo</label>
-                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Codigo" value="<?php echo isset($_GET['codigo']) ? filter_var($_GET['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                    <input type="text" class="form-control" id="codigo" name="codigo" placeholder="OPP1234567" value="<?php echo isset($data['codigo']) ? filter_var($data['codigo'], FILTER_SANITIZE_SPECIAL_CHARS) : ''; ?>" />
+                                    <p class="text-danger"><small><?php echo isset($errors['codigo'])? $errors['codigo'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="nombre">Nombre</label>
                                     <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre de producto" value="<?php echo filter_var($data['nombre'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                    <p class="text-danger"><small><?php echo isset($errors['nombre'])? $errors['nombre'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="descripcion">Descirpcion</label>
                                     <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="descripcion" value="<?php echo filter_var($data['descripcion'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                     <p class="text-danger"><small><?php echo isset($errors['descripcion'])? $errors['descripcion'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="coste">Coste</label>
                                     <input type="text" class="form-control" id="coste" name="coste" placeholder="coste" value="<?php echo filter_var($data['coste'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                     <p class="text-danger"><small><?php echo isset($errors['coste'])? $errors['coste'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="margen">Margen</label>
                                     <input type="text" class="form-control" id="margen" name="margen" placeholder="margen" value="<?php echo filter_var($data['margen'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                     <p class="text-danger"><small><?php echo isset($errors['margen'])? $errors['margen'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="stock">Stock</label>
                                     <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="<?php echo filter_var($data['stock'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                     <p class="text-danger"><small><?php echo isset($errors['stock'])? $errors['stock'] : '' ?></small></p>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="iva">IVA</label>
                                     <input type="text" class="form-control" id="iva" name="iva" placeholder="iva" readonly value="<?php echo filter_var($data['iva'], FILTER_SANITIZE_SPECIAL_CHARS); ?>" />
+                                     <p class="text-danger"><small><?php echo isset($errors['iva'])? $errors['iva'] : '' ?></small></p>
                                 </div>
                             </div>
 

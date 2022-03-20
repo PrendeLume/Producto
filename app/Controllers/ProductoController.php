@@ -142,7 +142,9 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                         'productoOriginal' => $producto
                     );
                         var_dump($sanitizado);
+                        $_vars["proveedores"] = $model->getProveedor();
                     
+                        $_vars["categorias"] = $model->getCategorias();
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
                 else {
