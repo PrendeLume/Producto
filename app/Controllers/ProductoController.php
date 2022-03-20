@@ -66,7 +66,6 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
             if (isset($_POST['gardar'])) {
                 $_errors = $this->checkForm($_POST);
                 
-                var_dump($_errors);
                 $sanitizado = $this->sanitizeForm($_POST);
                 if (count($_errors)> 0) {
                     $_vars = array(
@@ -78,7 +77,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                         'errors' => $_errors,
                         'data' => $sanitizado
                     );
-                    
+
                     $_vars["proveedores"] = $model->getProveedor();
                     
                     $_vars["categorias"] = $model->getCategorias();
@@ -100,7 +99,10 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                             'data' => $sanitizado,
                             'errors' => array('codigo' => 'Hubo un error indeterminado al guardar')
                         );
-                        
+
+                        $_vars["proveedores"] = $model->getProveedor();
+                    
+                        $_vars["categorias"] = $model->getCategorias();
                         $this->view->showViews(array('templates/header.view.php', 'producto.insert.view.php', 'templates/footer.view.php'), $_vars);
                     }
                 }
@@ -132,7 +134,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 $model = new \Com\Daw2\Models\ProductoModel();
                 if (count($_errors) > 0) {
 
-                    $producto = $model->cargarProducto($_POST['old_codigo']);
+                    $old_producto = $model->cargarProducto($_POST['old_codigo']);
                     $_vars = array('titulo' => 'Edición de producto',
                         'breadcumb' => array(
                             'Inicio' => array('url' => '#', 'active' => false),
@@ -141,16 +143,18 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                         'Título' => 'Editar producto',
                         'errors' => $_errors,
                         'data' => $sanitizado,
-                        'productoOriginal' => $producto
+                        'productoOriginal' => $old_producto
                     );
-                        $_vars["proveedores"] = $model->getProveedor();
+                    $_vars["proveedores"] = $model->getProveedor();
                     
-                        $_vars["categorias"] = $model->getCategorias();
+                    $_vars["categorias"] = $model->getCategorias();
+                        $producto = $model->cargarProducto($_POST['old_codigo']);
                     $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                 }
                 else {
                     $producto = array('codigo' =>$_POST['codigo'],'nombre'=> $sanitizado['nombre'],'descripcion'=> $sanitizado['descripcion'],'coste'=> $sanitizado['coste'],'margen'=> $_POST['margen'], 'stock'=>$_POST['stock'], 'iva'=> $_POST['iva'],'tipoProveedor'=> $sanitizado['proveedor'],'tipoCategoria'=> $sanitizado['categoria']);
                    
+                    $old_producto = $model->cargarProducto($_POST['old_codigo']);
                     if ($model->editProducto($producto, $_POST['old_codigo'])) {
                         $msj = new Mensaje('success', 'Éxito', 'El producto ha sido guardado con éxito');
                         $this->index($msj);
@@ -164,8 +168,12 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                             'Título' => 'Editar producto',
                             'errors' => $_errors,
                             'data' => $sanitizado,
-                            'productoOriginal' => $producto
+                            'productoOriginal' => $old_producto
                         );
+                        
+                    $_vars["proveedores"] = $model->getProveedor();
+                    
+                    $_vars["categorias"] = $model->getCategorias();
                         $this->view->showViews(array('templates/header.view.php', 'producto.edit.view.php', 'templates/footer.view.php'), $_vars);
                     }
                 }
@@ -244,7 +252,7 @@ class ProductoController extends \Com\Daw2\Core\BaseController {
                 if ($_data['old_codigo'] !== $_data['codigo']) {
                     $model = new \Com\Daw2\Models\ProductoModel();
                     $ProductoAux = $model->cargarProducto($_data['codigo']);
-                    if (empty($ProductoAux['codigo'])) {
+                    if (!empty($ProductoAux['codigo'])) {
                         $_errors['codigo'] = "Ya existe un producto con ese codigo";
                     }
                 }
